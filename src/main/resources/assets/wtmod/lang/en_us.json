@@ -1,3 +1,5 @@
 {
-  "item.wtmod.trigger": "Trigger"
+  "item.wtmod.trigger": "Trigger",
+
+  "creativetab.wtmod.wt_items": "World Trigger"
 }
