@@ -1,5 +1,6 @@
 package com.JSUSHDX.WorldTriggerMod;
 
+import com.JSUSHDX.WorldTriggerMod.blocks.ModBlocks;
 import com.JSUSHDX.WorldTriggerMod.creativemodetab.ModCreativeModTabs;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
@@ -39,6 +40,7 @@ public class WorldTriggerMod {
         ModCreativeModTabs.register(modEventBus);
 
         ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);

@@ -1,11 +1,11 @@
 package com.JSUSHDX.WorldTriggerMod.datagen;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.blocks.ModBlocks;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
-import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.data.PackOutput;
 
@@ -17,5 +17,7 @@ public class ModModelProvider extends ModelProvider {
     @Override
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         itemModels.generateFlatItem(ModItems.TRIGGER.get(), ModelTemplates.FLAT_ITEM);
+
+        // BLOCKS
     }
 }

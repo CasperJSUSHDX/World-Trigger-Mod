@@ -1,6 +1,7 @@
 package com.JSUSHDX.WorldTriggerMod.creativemodetab;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.blocks.ModBlocks;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -22,6 +23,7 @@ public class ModCreativeModTabs {
                             .title(Component.translatable("creativetab.wtmod.wt_items"))
                             .displayItems((itemDisplayParameters, output) -> {
                                 output.accept(ModItems.TRIGGER);
+                                output.accept(ModBlocks.ASSEMBLY_BENCH);
                             }).build());
 
     public static void register(IEventBus eventBus) {

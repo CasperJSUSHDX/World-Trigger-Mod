@@ -9,7 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(WorldTriggerMod.MODID);
 
-    public static final DeferredItem<Item> TRIGGER = ITEMS.registerSimpleItem("trigger", Item.Properties::new);
+    public static final DeferredItem<Item> TRIGGER = ITEMS.registerSimpleItem("trigger");
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

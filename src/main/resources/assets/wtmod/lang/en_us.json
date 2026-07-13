@@ -1,5 +1,7 @@
 {
   "item.wtmod.trigger": "Trigger",
 
+  "block.wtmod.assembly_bench": "Assembly bench",
+
   "creativetab.wtmod.wt_items": "World Trigger"
 }
