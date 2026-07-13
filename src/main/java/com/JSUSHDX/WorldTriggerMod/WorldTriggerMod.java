@@ -1,6 +1,6 @@
 package com.JSUSHDX.WorldTriggerMod;
 
-import com.JSUSHDX.WorldTriggerMod.item.ModCreativeModTabs;
+import com.JSUSHDX.WorldTriggerMod.creativemodetab.ModCreativeModTabs;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import org.slf4j.Logger;
