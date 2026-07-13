@@ -26,6 +26,12 @@ sourceSets.main.resources {
     exclude("src/generated/**/.cache") // datagen cache files
 }
 
+tasks.named('processResources', ProcessResources).configure {
+    // If a resource exists in both src/main/resources and src/generated/resources,
+    // this will keep the first one encountered (src/main/resources) and exclude the generated one.
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 repositories {
     // Add here additional repositories if required by some of the dependencies below.
 }
