@@ -21,7 +21,7 @@ public class ModDataComponents {
                             .networkSynchronized(ByteBufCodecs.BOOL));
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MODE =
-            register("is_on",
+            register("mode",
                     booleanBuilder -> booleanBuilder.persistent(Codec.INT)
                             .networkSynchronized(ByteBufCodecs.INT));
 
