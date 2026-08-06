@@ -1,6 +1,7 @@
 {
   "item.wtmod.trigger": "Trigger",
   "item.wtmod.shield_trigger": "Shield",
+  "item.wtmod.asteroid_trigger": "Asteroid",
 
   "block.wtmod.assembly_bench": "Assembly bench",
 

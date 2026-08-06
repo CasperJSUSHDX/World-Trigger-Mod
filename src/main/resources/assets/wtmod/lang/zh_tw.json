@@ -1,6 +1,7 @@
 {
   "item.wtmod.trigger": "觸發",
   "item.wtmod.shield_trigger": "盾",
+  "item.wtmod.asteroid_trigger": "普通彈",
 
   "block.wtmod.assembly_bench": "裝配台",
 
