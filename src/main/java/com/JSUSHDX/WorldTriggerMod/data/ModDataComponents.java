@@ -20,6 +20,11 @@ public class ModDataComponents {
                     booleanBuilder -> booleanBuilder.persistent(Codec.BOOL)
                             .networkSynchronized(ByteBufCodecs.BOOL));
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MODE =
+            register("is_on",
+                    booleanBuilder -> booleanBuilder.persistent(Codec.INT)
+                            .networkSynchronized(ByteBufCodecs.INT));
+
     private static <T>DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,
                                                                                           UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
         return DATA_COMPONENT_TYPES.register(name, () -> builderOperator.apply(DataComponentType.builder()).build());
