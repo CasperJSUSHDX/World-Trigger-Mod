@@ -58,8 +58,13 @@ public class AsteroidTriggerItem extends Item {
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide()) {
-            BiConsumer<Level, Player> method = modeMap.get(player.getMainHandItem().get(ModDataComponents.MODE)).method;
-            method.accept(level, player);
+            Integer mode = player.getMainHandItem().getOrDefault(ModDataComponents.MODE, 0);
+            if (mode == null) mode = 0; // Default mode
+
+            modeMethods methods = modeMap.get(mode);
+            if (methods != null) {
+                methods.method.accept(level, player);
+            }
         }
 
         return InteractionResult.SUCCESS;
@@ -118,6 +123,8 @@ public class AsteroidTriggerItem extends Item {
                     }
                 }
             }
+            // Clear bullets after triggering to prevent memory leaks
+            placedBulletsMap.remove(playerId);
         }
     }
 
@@ -138,8 +145,11 @@ public class AsteroidTriggerItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
-        int mode = itemStack.get(ModDataComponents.MODE);
-        Component msg = Component.translatable("tooltip.wtmod.mode", Component.translatable(modeMap.get(mode).langId)).withColor(TextColor.WHITE);
-        builder.accept(msg);
+        int mode = itemStack.getOrDefault(ModDataComponents.MODE, 0);
+        modeMethods methods = modeMap.get(mode);
+        if (methods != null) {
+            Component msg = Component.translatable("tooltip.wtmod.mode", Component.translatable(methods.langId)).withColor(TextColor.WHITE);
+            builder.accept(msg);
+        }
     }
 }
