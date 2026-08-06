@@ -96,8 +96,8 @@ public class AsteroidTriggerItem extends Item {
             Vec3 randomOffset = new Vec3(random.nextDouble() * 0.5, random.nextDouble() * 0.5, random.nextDouble() * 0.5);
             bullet.setupStats(20.0d, 0.0d, 0.7d, 2.5d);
 
-            bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0f, 0.0f, 1.0f);
             bullet.setPos(bulletPos.add(randomOffset));
+            bullet.setStoredDirection(player.getLookAngle());
 
             level.addFreshEntity(bullet);
 
@@ -112,15 +112,16 @@ public class AsteroidTriggerItem extends Item {
         if (bullets != null) {
             for (ModTrionBullet bullet : bullets) {
                 if (!bullet.isRemoved()) {
-                    Vec3 look = bullet.getLookAngle();
-
-                    bullet.shoot(look.x, look.y, look.z, 1.5f, 1.0f);
+                    Vec3 dir = bullet.getStoredDirection();
+                    if (dir != null) {
+                        bullet.shoot(dir.x, dir.y, dir.z, 1.5f, 0.0f);
+                    }
                 }
             }
         }
     }
 
-    private static void shootBullet(Level level, Player player) {
+    public static void shootBullet(Level level, Player player) {
         Vec3 playerPos = player.position();
         RandomSource random = level.getRandom();
 
@@ -129,8 +130,8 @@ public class AsteroidTriggerItem extends Item {
         ModTrionBullet bullet = new ModTrionBullet(ModEntities.TRION_BULLET.get(), level);
 
         bullet.setupStats(20.0d, 0.001d, 0.7d, 2.5d);
-        bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0f, 1.5f, 1.0f);
         bullet.setPos(playerPos.add(0, 2, 0).add(randomOffset));
+        bullet.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0f, 1.5f, 1.0f);
 
         level.addFreshEntity(bullet);
     }
