@@ -24,7 +24,8 @@ public class ShieldTriggerItem extends net.minecraft.world.item.ShieldItem {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!level.isClientSide()) {
-            boolean newState = !stack.get(ModDataComponents.IS_ON);
+            Boolean isOn = stack.getOrDefault(ModDataComponents.IS_ON, false);
+            boolean newState = !isOn;
             stack.set(ModDataComponents.IS_ON, newState);
         }
 
@@ -34,12 +35,12 @@ public class ShieldTriggerItem extends net.minecraft.world.item.ShieldItem {
     @Override
     // Give enchanted visual effect
     public boolean isFoil(ItemStack itemStack) {
-        return itemStack.get(ModDataComponents.IS_ON);
+        return itemStack.getOrDefault(ModDataComponents.IS_ON, false);
     }
 
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
-        Boolean isOn = itemStack.get(ModDataComponents.IS_ON);
+        Boolean isOn = itemStack.getOrDefault(ModDataComponents.IS_ON, false);
         Component msg = Component.translatable("tooltip.wtmod.is_on", (isOn ? "On" : "Off")).withColor(TextColor.GREEN);
         builder.accept(msg);
     }

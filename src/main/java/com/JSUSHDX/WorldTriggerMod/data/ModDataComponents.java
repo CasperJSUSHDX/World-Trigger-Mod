@@ -1,6 +1,8 @@
 package com.JSUSHDX.WorldTriggerMod.data;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.data.records.HealthData;
+import com.JSUSHDX.WorldTriggerMod.data.records.InventoryData;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -24,6 +26,17 @@ public class ModDataComponents {
             register("mode",
                     booleanBuilder -> booleanBuilder.persistent(Codec.INT)
                             .networkSynchronized(ByteBufCodecs.INT));
+
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<HealthData>> HEALTH_DATA =
+            register("health_data",
+                    booleanBuilder -> booleanBuilder.persistent(HealthData.CODEC)
+                            .networkSynchronized(HealthData.STREAM_CODEC));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<InventoryData>> INVENTORY_DATA =
+            register("inventory_data",
+                    builder -> builder.persistent(InventoryData.CODEC)
+                            .networkSynchronized(InventoryData.STREAM_CODEC));
 
     private static <T>DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,
                                                                                           UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
