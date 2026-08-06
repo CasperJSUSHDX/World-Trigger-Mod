@@ -190,3 +190,25 @@ idea {
         downloadJavadoc = true
     }
 }
+
+tasks.register('reflectScreen') {
+    def cpFiles = project.configurations.compileClasspath.files
+    doLast {
+        try {
+            def urls = cpFiles.collect { it.toURI().toURL() } as java.net.URL[]
+            def cl = new java.net.URLClassLoader(urls, null)
+            def cls = Class.forName('net.minecraft.client.gui.screens.Screen', false, cl)
+            println 'Screen render methods:'
+            cls.getMethods().findAll { it.name.startsWith('render') }.each { m ->
+                println m.name + "(" + m.getParameterTypes().collect { it.name }.join(', ') + ")"
+            }
+            println 'Renderable render methods:'
+            def renderable = Class.forName('net.minecraft.client.gui.components.Renderable', false, cl)
+            renderable.getMethods().findAll { it.name.startsWith('render') }.each { m ->
+                println m.name + "(" + m.getParameterTypes().collect { it.name }.join(', ') + ")"
+            }
+        } catch(Exception e) { e.printStackTrace() }
+    }
+}
+
+
