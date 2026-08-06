@@ -14,6 +14,7 @@ public class ModTrionBullet extends AbstractArrow {
     private double  power;
     private double maxDistance;
     private Vec3 startPos;
+    private Vec3 storedDirection;
 
     protected ModTrionBullet(double totalTrion, double speedRate, double powerRate, double rangeRate, EntityType<? extends AbstractArrow> type, Level level) {
         super(type, level);
@@ -50,12 +51,25 @@ public class ModTrionBullet extends AbstractArrow {
         return ItemStack.EMPTY;
     }
 
+    public void setStoredDirection(Vec3 direction) {
+        this.storedDirection = direction.normalize();
+    }
+
+    public Vec3 getStoredDirection() {
+        return this.storedDirection;
+    }
+
     @Override
     protected void addAdditionalSaveData(ValueOutput output) {
         super.addAdditionalSaveData(output);
 
         output.putDouble("speed", this.speed);
         output.putDouble("maxDistance", this.maxDistance);
+        if (this.storedDirection != null) {
+            output.putDouble("storedDirX", this.storedDirection.x);
+            output.putDouble("storedDirY", this.storedDirection.y);
+            output.putDouble("storedDirZ", this.storedDirection.z);
+        }
     }
 
     @Override
@@ -64,6 +78,12 @@ public class ModTrionBullet extends AbstractArrow {
 
         this.speed = input.getDoubleOr("speed", 0.0);
         this.maxDistance = input.getDoubleOr("maxDistance", 0.0);
+        double dirX = input.getDoubleOr("storedDirX", 0.0);
+        double dirY = input.getDoubleOr("storedDirY", 0.0);
+        double dirZ = input.getDoubleOr("storedDirZ", 0.0);
+        if (dirX != 0.0 || dirY != 0.0 || dirZ != 0.0) {
+            this.storedDirection = new Vec3(dirX, dirY, dirZ).normalize();
+        }
     }
 
     public void setupStats(double totalTrion, double speedRate, double powerRate, double rangeRate) {
