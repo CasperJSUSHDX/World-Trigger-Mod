@@ -17,7 +17,7 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> ASSEMBLY_BENCH = registerBlock("assembly_bench",
             properties -> new Block(
-                    properties.strength(4f).requiresCorrectToolForDrops()));
+                    properties.strength(4f)));
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, T> function) {
         DeferredBlock<T> toReturn = BLOCKS.registerBlock(name, function);
