@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 
@@ -23,7 +24,7 @@ public class ShieldTriggerItem extends net.minecraft.world.item.ShieldItem {
         ItemStack stack = player.getItemInHand(hand);
 
         if (!level.isClientSide()) {
-            boolean newState = !stack.getOrDefault(ModDataComponents.IS_ON, false);
+            boolean newState = !stack.get(ModDataComponents.IS_ON);
             stack.set(ModDataComponents.IS_ON, newState);
         }
 
@@ -38,10 +39,8 @@ public class ShieldTriggerItem extends net.minecraft.world.item.ShieldItem {
 
     @Override
     public void appendHoverText(ItemStack itemStack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag tooltipFlag) {
-        if (itemStack.has(ModDataComponents.IS_ON)) {
-            Boolean isOn = itemStack.getOrDefault(ModDataComponents.IS_ON, false);
-            Component msg = Component.translatable("tooltip.wtmod.is_on", (isOn ? "On" : "Off")).withColor(TextColor.GREEN);
-            builder.accept(msg);
-        }
+        Boolean isOn = itemStack.get(ModDataComponents.IS_ON);
+        Component msg = Component.translatable("tooltip.wtmod.is_on", (isOn ? "On" : "Off")).withColor(TextColor.GREEN);
+        builder.accept(msg);
     }
 }

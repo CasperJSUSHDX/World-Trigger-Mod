@@ -8,6 +8,7 @@
   "creativetab.wtmod.wt_items": "World Trigger",
 
   "tooltip.wtmod.is_on": "Status: %s",
+  "tooltip.wtmod.mode": "Mode: %s",
   "message.wtmod.status_on": "%1$s on",
   "message.wtmod.status_off": "%1$s off"
 }

@@ -1,6 +1,7 @@
 package com.JSUSHDX.WorldTriggerMod.item;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
 import com.JSUSHDX.WorldTriggerMod.item.custom.AsteroidTriggerItem;
 import com.JSUSHDX.WorldTriggerMod.item.custom.ShieldTriggerItem;
 import net.minecraft.world.item.Item;
@@ -14,10 +15,10 @@ public class ModItems {
     public static final DeferredItem<Item> TRIGGER = ITEMS.registerSimpleItem("trigger");
 
     public static final DeferredItem<Item> SHIELD_TRIGGER = ITEMS.registerItem("shield_trigger",
-            properties -> new ShieldTriggerItem(properties.useCooldown(1.0f)));
+            properties -> new ShieldTriggerItem(properties.useCooldown(1.0f).component(ModDataComponents.IS_ON, false)));
 
     public static final DeferredItem<Item> ASTEROID_TRIGGER = ITEMS.registerItem("asteroid_trigger",
-            properties -> new AsteroidTriggerItem(properties.useCooldown(1.0f)));
+            properties -> new AsteroidTriggerItem(properties.useCooldown(1.0f).component(ModDataComponents.MODE, 0)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
