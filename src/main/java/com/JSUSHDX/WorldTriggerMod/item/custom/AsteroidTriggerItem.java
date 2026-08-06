@@ -45,8 +45,11 @@ public class AsteroidTriggerItem extends Item {
         super(properties);
     }
 
-    public record modeMethods(String langId, Consumer<Level> feature) {};
-    public static final Map<Integer, modeMethods> modeMap = new HashMap<>();
+    public record modeMethods(String langId, Consumer<Void> feature) {};
+    public static final Map<Integer, modeMethods> modeMap = new HashMap<>(Map.of(
+            0, new modeMethods("tooltip.wtmod.asteroid_mode0", (Void)->{}),
+            4, new modeMethods("tooltip.wtmod.asteroid_mode4", (Void)->{})
+    ));
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
