@@ -34,7 +34,7 @@ public class ShieldTriggerItem extends net.minecraft.world.item.ShieldItem {
     @Override
     // Give enchanted visual effect
     public boolean isFoil(ItemStack itemStack) {
-        return itemStack.getOrDefault(ModDataComponents.IS_ON, false);
+        return itemStack.get(ModDataComponents.IS_ON);
     }
 
     @Override
