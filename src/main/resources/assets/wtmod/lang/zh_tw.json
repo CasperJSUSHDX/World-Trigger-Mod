@@ -8,7 +8,9 @@
   "creativetab.wtmod.wt_items": "境界觸發者",
 
   "tooltip.wtmod.is_on": "狀態: %s",
-  "tooltip.wtmod.mode": "模式: %s",
   "message.wtmod.status_on": "啟動 %1$s",
-  "message.wtmod.status_off": "關閉 %1$s"
+  "message.wtmod.status_off": "關閉 %1$s",
+  "tooltip.wtmod.mode": "模式: %s",
+  "tooltip.wtmod.asteroid_mode0": "射擊",
+  "tooltip.wtmod.asteroid_mode4": "放置"
 }
