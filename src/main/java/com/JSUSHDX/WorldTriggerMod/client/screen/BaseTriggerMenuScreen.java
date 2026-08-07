@@ -1,12 +1,19 @@
 package com.JSUSHDX.WorldTriggerMod.client.screen;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.client.screen.custom.AsteroidMenuScreen;
+import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+import net.minecraft.client.input.MouseButtonEvent;
 
 public abstract class BaseTriggerMenuScreen extends Screen {
     public static final Identifier BG_TEXTURE = Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "textures/gui/radial_menu_bg.png");
@@ -14,7 +21,6 @@ public abstract class BaseTriggerMenuScreen extends Screen {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public int hoveredSlot = -1;
-    protected final int totalSlots = 8;
     public static BaseTriggerMenuScreen INSTANCE = null;
 
     public BaseTriggerMenuScreen(Component title) {
@@ -87,6 +93,15 @@ public abstract class BaseTriggerMenuScreen extends Screen {
     }
 
     public abstract void onSlotClicked(int slotIndex);
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (event.button() == 0 && this.hoveredSlot != -1) {
+            this.onSlotClicked(this.hoveredSlot);
+            return true;
+        }
+        return super.mouseClicked(event, doubleClick);
+    }
 
     @Override
     public boolean isPauseScreen() {
