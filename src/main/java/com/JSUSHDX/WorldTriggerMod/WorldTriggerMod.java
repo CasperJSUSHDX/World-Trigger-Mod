@@ -2,6 +2,7 @@ package com.JSUSHDX.WorldTriggerMod;
 
 import com.JSUSHDX.WorldTriggerMod.blocks.ModBlocks;
 import com.JSUSHDX.WorldTriggerMod.creativemodetab.ModCreativeModTabs;
+import com.JSUSHDX.WorldTriggerMod.data.ModDataAttachment;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
 import com.JSUSHDX.WorldTriggerMod.entity.ModEntities;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
@@ -48,6 +49,7 @@ public class WorldTriggerMod {
         ModBlocks.register(modEventBus);
 
         ModDataComponents.register(modEventBus);
+        ModDataAttachment.register(modEventBus);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
