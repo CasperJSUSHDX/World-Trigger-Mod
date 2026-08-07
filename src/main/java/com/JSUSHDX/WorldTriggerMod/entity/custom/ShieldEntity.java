@@ -4,6 +4,8 @@ import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
 import com.JSUSHDX.WorldTriggerMod.entity.ModEntities;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -15,46 +17,72 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public class ShieldEntity extends Entity {
-    private UUID owner;
+    private static final EntityDataAccessor<Integer> DATA_OWNER_ID = 
+            SynchedEntityData.defineId(ShieldEntity.class, EntityDataSerializers.INT);
 
-    // Default constructor required by EntityType registration
+    // UUID for server side
+    private UUID ownerUUID;
+
     public ShieldEntity(EntityType<?> type, Level level) {
         super(type, level);
     }
 
-    // Convenience constructor for spawning
     public ShieldEntity(Level level, Player owner) {
         super(ModEntities.SHIELD_ENTITY.get(), level);
-        this.owner = owner.getUUID();
+        this.ownerUUID = owner.getUUID();
+        this.entityData.set(DATA_OWNER_ID, owner.getId());
         this.setPos(owner.getX(), owner.getEyeY(), owner.getZ());
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        builder.define(DATA_OWNER_ID, -1);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (this.owner == null) {
-            if (!this.level().isClientSide()) {
+        Player player = null;
+
+        if (!this.level().isClientSide()) {
+            // Server 端：依賴 UUID 準確找人
+            if (this.ownerUUID == null) {
                 this.discard();
+                return;
             }
-            return;
+            player = this.level().getPlayerByUUID(this.ownerUUID);
+            
+            // 確保 Client 的 ID 是一致的
+            if (player != null && this.entityData.get(DATA_OWNER_ID) != player.getId()) {
+                this.entityData.set(DATA_OWNER_ID, player.getId());
+            }
+        } else {
+            // Client 端：直接利用 Entity ID 快速找人，避免 UUID 查找
+            int ownerId = this.entityData.get(DATA_OWNER_ID);
+            if (ownerId != -1) {
+                Entity entity = this.level().getEntity(ownerId);
+                if (entity instanceof Player) {
+                    player = (Player) entity;
+                }
+            }
         }
 
-        Player player = this.level().getPlayerByUUID(this.owner);
-
-        // Discard conditions 1: player offline, dead, or we can add item check later
         if (player == null || player.isRemoved() || !player.isAlive()) {
             if (!this.level().isClientSide()) {
                 this.discard();
             }
             return;
         }
+
         // Discard conditions 2: player turn off the trigger
         ItemStack itemstack = player.getMainHandItem();
         if (itemstack.is(ModItems.SHIELD_TRIGGER.get())) {
@@ -64,24 +92,20 @@ public class ShieldEntity extends Entity {
 
         // Calculate position slightly in front of the player
         Vec3 lookAngle = player.getLookAngle();
-        double distance = 1.5; // Blocks in front of player
+        double distance = 1.5; 
         
         double targetX = player.getX() + lookAngle.x * distance;
-        // Adjust Y to be roughly at chest/eye level
         double targetY = player.getEyeY() - 0.5 + lookAngle.y * distance; 
         double targetZ = player.getZ() + lookAngle.z * distance;
 
-        // Teleport the entity to the target position and match player's rotation
-        this.teleportTo(targetX, targetY, targetZ);
+        // 設定座標與旋轉
+        this.setPosRaw(targetX, targetY, targetZ); 
         this.setYRot(player.getYRot());
         this.setXRot(player.getXRot());
         this.yRotO = player.yRotO;
         this.xRotO = player.xRotO;
     }
 
-    /**
-     * Ensure this entity can be hit by projectile or player
-     * */
     @Override
     public boolean isPickable() {
         return true;
@@ -93,44 +117,32 @@ public class ShieldEntity extends Entity {
     }
 
     @Override
-    protected void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput input) {
+    protected void readAdditionalSaveData(ValueInput input) {
         Optional<String> ownerStr = input.getString("Owner");
         if (ownerStr.isPresent() && !ownerStr.get().isEmpty()) {
-            this.owner = UUID.fromString(ownerStr.get());
+            this.ownerUUID = UUID.fromString(ownerStr.get());
         }
     }
 
     @Override
-    protected void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput output) {
-        if (this.owner != null) {
-            output.putString("Owner", this.owner.toString());
+    protected void addAdditionalSaveData(ValueOutput output) {
+        if (this.ownerUUID != null) {
+            output.putString("Owner", this.ownerUUID.toString());
         }
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        // Here you can add data to sync to the client (e.g. current health of the shield)
     }
 
     @Override
     public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float amount) {
-        // Prevent damage from the owner
-        if (damageSource.getEntity() != null && damageSource.getEntity().getUUID().equals(this.owner)) {
+        if (damageSource.getEntity() != null && this.ownerUUID != null && damageSource.getEntity().getUUID().equals(this.ownerUUID)) {
             return false;
         }
 
-        // Play shield block sound
         serverLevel.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.SHIELD_BLOCK, SoundSource.PLAYERS, 1.0F, 0.8F + serverLevel.getRandom().nextFloat() * 0.4F);
 
-        // If it's a projectile, we can show some particles where it hit
         if (damageSource.getDirectEntity() instanceof Projectile) {
             serverLevel.sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 5, 0.2, 0.2, 0.2, 0.05);
         }
 
-        // TODO: Subtract from Trion/Health. For now, it just absorbs the damage.
-        // If Health <= 0, then this.discard() and play break sound (SoundEvents.SHIELD_BREAK).
-
-        // Return true to indicate the damage was successfully handled/intercepted
         return true;
     }
 }
