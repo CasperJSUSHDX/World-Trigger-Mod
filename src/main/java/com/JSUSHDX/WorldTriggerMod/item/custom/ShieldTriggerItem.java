@@ -7,14 +7,14 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ShieldItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
-import org.jspecify.annotations.NonNull;
 
 import java.util.function.Consumer;
 
-public class ShieldTriggerItem extends net.minecraft.world.item.ShieldItem {
+public class ShieldTriggerItem extends ShieldItem {
     public ShieldTriggerItem(Properties properties) {
         super(properties);
     }
