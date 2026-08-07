@@ -1,9 +1,6 @@
 package com.JSUSHDX.WorldTriggerMod;
 
-import com.JSUSHDX.WorldTriggerMod.datagen.ModBlockLootTableProvider;
-import com.JSUSHDX.WorldTriggerMod.datagen.ModBlockTagsProvider;
-import com.JSUSHDX.WorldTriggerMod.datagen.ModModelProvider;
-import com.JSUSHDX.WorldTriggerMod.datagen.ModRecipeProvider;
+import com.JSUSHDX.WorldTriggerMod.datagen.*;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
@@ -25,6 +22,7 @@ public class WorldTriggerModDataGen {
 
         generator.addProvider(true, new ModModelProvider(packOutput));
         generator.addProvider(true, new ModBlockTagsProvider(packOutput, lookupProvider));
+        generator.addProvider(true, new ModItemTagsProvider(packOutput, lookupProvider));
         generator.addProvider(true, new LootTableProvider(packOutput,
                 Collections.emptySet(),
                 List.of(new LootTableProvider.SubProviderEntry(ModBlockLootTableProvider::new, LootContextParamSets.BLOCK)),

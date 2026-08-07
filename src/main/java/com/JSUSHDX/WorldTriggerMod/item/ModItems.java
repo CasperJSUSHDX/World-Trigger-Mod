@@ -22,6 +22,10 @@ public class ModItems {
     public static final DeferredItem<Item> ASTEROID_TRIGGER = ITEMS.registerItem("asteroid_trigger",
             properties -> new AsteroidTriggerItem(properties.useCooldown(1.0f).component(ModDataComponents.MODE, 0)));
 
+    public static final DeferredItem<Item> KOGETSU_TRIGGER = ITEMS.registerItem("kogetsu_trigger",
+            properties -> new Item(properties.component(ModDataComponents.IS_ON, false)
+                    .sword(ModToolTiers.TRION, 3.0f, -2.4f)));
+
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
     }
