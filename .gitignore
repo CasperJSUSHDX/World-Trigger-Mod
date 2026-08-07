@@ -39,3 +39,5 @@ run/
 repo/
 !**/src/**/repo/
 *.bbmodel
+/base.pixil
+/base.png
