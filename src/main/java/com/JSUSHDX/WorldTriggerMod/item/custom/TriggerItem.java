@@ -1,9 +1,11 @@
 package com.JSUSHDX.WorldTriggerMod.item.custom;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.data.ModDataAttachment;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
 import com.JSUSHDX.WorldTriggerMod.data.records.HealthData;
 import com.JSUSHDX.WorldTriggerMod.data.records.InventoryData;
+import com.JSUSHDX.WorldTriggerMod.util.TriggerStateUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -47,7 +49,7 @@ public class TriggerItem extends Item {
         // Write into trigger
         itemStack.set(ModDataComponents.INVENTORY_DATA, new InventoryData(containerContents));
 
-        // Clean player inventory (保留當前使用的 trigger)
+        // Clean player inventory (Keep trigger)
         for (int i = 0; i < invSize; ++i) {
             if (player.getInventory().getItem(i) != itemStack) {
                 player.getInventory().setItem(i, ItemStack.EMPTY);
@@ -93,6 +95,7 @@ public class TriggerItem extends Item {
                 itemStack.set(ModDataComponents.IS_ON, true);
                 itemStack.set(ModDataComponents.HEALTH_DATA, new HealthData(player.getHealth(), player.getMaxHealth()));
                 player.setHealth(player.getMaxHealth());
+                TriggerStateUtils.toggleState(player);
             } else {
                 restoreTriggerSavedInventoryToPlayer(player, itemStack);
                 itemStack.set(ModDataComponents.IS_ON, false);
@@ -114,6 +117,7 @@ public class TriggerItem extends Item {
                         maxHealthAttr.addPermanentModifier(modifier);
                     }
                 }
+                TriggerStateUtils.toggleState(player);
                 // Heal to record health
                 player.setHealth(data.current());
                 itemStack.remove(ModDataComponents.HEALTH_DATA);

@@ -1,6 +1,7 @@
 package com.JSUSHDX.WorldTriggerMod.data;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.data.custom.TriggerStateData;
 import com.JSUSHDX.WorldTriggerMod.data.custom.TrionData;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -19,6 +20,16 @@ public class ModDataAttachment {
                     () -> AttachmentType.builder(TrionData::new)
                             .serialize(TrionData.CODEC)
                             .sync(TrionData.STREAM_CODEC)
+                            .copyOnDeath()
+                            .build()
+            );
+
+    public static final Supplier<AttachmentType<TriggerStateData>> TRIGGER_STATE_DATA =
+            ATTACHMENT_TYPES.register(
+                    "trigger_state_data",
+                    () -> AttachmentType.builder(() -> new TriggerStateData())
+                            .serialize(TriggerStateData.CODEC)
+                            .sync(TriggerStateData.STREAM_CODEC)
                             .copyOnDeath()
                             .build()
             );
