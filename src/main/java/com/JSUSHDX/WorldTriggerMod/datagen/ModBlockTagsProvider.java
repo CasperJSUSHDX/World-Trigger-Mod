@@ -2,6 +2,7 @@ package com.JSUSHDX.WorldTriggerMod.datagen;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
 import com.JSUSHDX.WorldTriggerMod.blocks.ModBlocks;
+import com.JSUSHDX.WorldTriggerMod.tags.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
