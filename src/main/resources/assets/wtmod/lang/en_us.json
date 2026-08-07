@@ -13,5 +13,9 @@
   "message.wtmod.status_off": "%1$s off",
   "tooltip.wtmod.mode": "Mode: %s",
   "tooltip.wtmod.asteroid_mode0": "Shooting",
-  "tooltip.wtmod.asteroid_mode4": "Placing"
+  "tooltip.wtmod.asteroid_mode4": "Placing",
+
+  "key.category.wtmod.wtmod_keymap": "World Trigger",
+  "key.wtmod.trigger_item": "Trigger ability",
+  "key.wtmod.open_trigger_menu": "Open trigger menu"
 }

@@ -13,5 +13,9 @@
   "message.wtmod.status_off": "關閉 %1$s",
   "tooltip.wtmod.mode": "模式: %s",
   "tooltip.wtmod.asteroid_mode0": "射擊",
-  "tooltip.wtmod.asteroid_mode4": "放置"
+  "tooltip.wtmod.asteroid_mode4": "放置",
+
+  "key.category.wtmod.wtmod_keymap": "境界觸發者 (World Trigger)",
+  "key.wtmod.trigger_item": "啟動能力",
+  "key.wtmod.open_trigger_menu": "開啟面板"
 }
