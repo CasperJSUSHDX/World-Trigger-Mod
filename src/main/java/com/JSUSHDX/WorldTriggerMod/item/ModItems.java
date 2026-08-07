@@ -3,6 +3,7 @@ package com.JSUSHDX.WorldTriggerMod.item;
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
 import com.JSUSHDX.WorldTriggerMod.item.custom.AsteroidTriggerItem;
+import com.JSUSHDX.WorldTriggerMod.item.custom.KogetsuTriggerItem;
 import com.JSUSHDX.WorldTriggerMod.item.custom.ShieldTriggerItem;
 import com.JSUSHDX.WorldTriggerMod.item.custom.TriggerItem;
 import net.minecraft.world.item.Item;
@@ -23,8 +24,7 @@ public class ModItems {
             properties -> new AsteroidTriggerItem(properties.useCooldown(1.0f).component(ModDataComponents.MODE, 0)));
 
     public static final DeferredItem<Item> KOGETSU_TRIGGER = ITEMS.registerItem("kogetsu_trigger",
-            properties -> new Item(properties.component(ModDataComponents.IS_ON, false)
-                    .sword(ModToolTiers.TRION, 3.0f, -2.4f)));
+            properties -> new KogetsuTriggerItem(properties.component(ModDataComponents.IS_ON, false)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
