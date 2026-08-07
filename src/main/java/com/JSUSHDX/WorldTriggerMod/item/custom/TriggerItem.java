@@ -1,13 +1,11 @@
 package com.JSUSHDX.WorldTriggerMod.item.custom;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
-import com.JSUSHDX.WorldTriggerMod.data.ModDataAttachment;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
 import com.JSUSHDX.WorldTriggerMod.data.records.HealthData;
 import com.JSUSHDX.WorldTriggerMod.data.records.InventoryData;
 import com.JSUSHDX.WorldTriggerMod.util.TriggerStateUtils;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
