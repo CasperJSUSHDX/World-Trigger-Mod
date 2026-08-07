@@ -1,6 +1,7 @@
 package com.JSUSHDX.WorldTriggerMod.item.custom;
 
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
+import com.JSUSHDX.WorldTriggerMod.entity.custom.ShieldEntity;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.InteractionHand;
@@ -27,6 +28,11 @@ public class ShieldTriggerItem extends ShieldItem {
             Boolean isOn = stack.getOrDefault(ModDataComponents.IS_ON, false);
             boolean newState = !isOn;
             stack.set(ModDataComponents.IS_ON, newState);
+
+            if (newState) {
+                ShieldEntity shieldEntity = new ShieldEntity(level, player);
+                level.addFreshEntity(shieldEntity);
+            }
         }
 
         return InteractionResult.SUCCESS;
