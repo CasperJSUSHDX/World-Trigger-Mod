@@ -1,6 +1,7 @@
 package com.JSUSHDX.WorldTriggerMod;
 
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
+import com.JSUSHDX.WorldTriggerMod.util.TrionUtils;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -33,8 +34,8 @@ public class WorldTriggerModCustomCommands {
     public static int executeTrionGet(CommandSourceStack source) {
         try {
             ServerPlayer player = source.getPlayerOrException();
-            float trion = com.JSUSHDX.WorldTriggerMod.util.TrionUtils.getTrion(player);
-            float maxTrion = com.JSUSHDX.WorldTriggerMod.util.TrionUtils.getMaxTrion(player);
+            float trion = TrionUtils.getTrion(player);
+            float maxTrion = TrionUtils.getMaxTrion(player);
             player.sendSystemMessage(Component.literal("§b[WT] 當前觸力能: " + trion + " / " + maxTrion));
             return 1;
         } catch (Exception e) {
@@ -46,8 +47,8 @@ public class WorldTriggerModCustomCommands {
     public static int executeTrionAdd(CommandSourceStack source, float amount) {
         try {
             ServerPlayer player = source.getPlayerOrException();
-            com.JSUSHDX.WorldTriggerMod.util.TrionUtils.addTrion(player, amount);
-            float current = com.JSUSHDX.WorldTriggerMod.util.TrionUtils.getTrion(player);
+            TrionUtils.addTrion(player, amount);
+            float current = TrionUtils.getTrion(player);
             player.sendSystemMessage(Component.literal("§a[WT] 增加 " + amount + " 觸力能。當前: " + current));
             return 1;
         } catch (Exception e) {
@@ -59,13 +60,13 @@ public class WorldTriggerModCustomCommands {
     public static int executeTrionConsume(CommandSourceStack source, float amount) {
         try {
             ServerPlayer player = source.getPlayerOrException();
-            boolean success = com.JSUSHDX.WorldTriggerMod.util.TrionUtils.consumeTrion(player, amount);
+            boolean success = TrionUtils.consumeTrion(player, amount);
             if (success) {
-                float current = com.JSUSHDX.WorldTriggerMod.util.TrionUtils.getTrion(player);
+                float current = TrionUtils.getTrion(player);
                 player.sendSystemMessage(Component.literal("§e[WT] 成功消耗 " + amount + " 觸力能。剩餘: " + current));
                 return 1;
             } else {
-                float current = com.JSUSHDX.WorldTriggerMod.util.TrionUtils.getTrion(player);
+                float current = TrionUtils.getTrion(player);
                 player.sendSystemMessage(Component.literal("§c[WT] 觸力能不足！需要: " + amount + "，目前只有: " + current));
                 return 0;
             }
