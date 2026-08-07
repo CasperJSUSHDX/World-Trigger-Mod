@@ -38,6 +38,14 @@ public class ShieldTriggerItem extends ShieldItem {
         return InteractionResult.SUCCESS;
     }
 
+    /**
+     * Prevent Shield-raising animation
+     */
+    @Override
+    public int getUseDuration(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
+        return 0;
+    }
+
     @Override
     // Give enchanted visual effect
     public boolean isFoil(ItemStack itemStack) {
