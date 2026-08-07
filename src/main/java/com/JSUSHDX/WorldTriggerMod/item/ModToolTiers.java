@@ -8,5 +8,5 @@ import net.minecraft.world.level.block.Block;
 
 public class ModToolTiers {
     public static final ToolMaterial TRION = new ToolMaterial(BlockTags.INCORRECT_FOR_DIAMOND_TOOL,
-            1200, 3f, 3f, 22, ItemTags.DIAMOND_TOOL_MATERIALS);
+            1200, 3f, 6f, 22, ItemTags.DIAMOND_TOOL_MATERIALS);
 }
