@@ -1,0 +1,32 @@
+{
+    "variants": {
+        "facing=north,half=left": {
+            "model": "wtmod:block/assembly_bench",
+            "y": 270
+        },
+        "facing=east,half=left": {
+            "model": "wtmod:block/assembly_bench",
+            "y": 0
+        },
+        "facing=south,half=left": {
+            "model": "wtmod:block/assembly_bench",
+            "y": 90
+        },
+        "facing=west,half=left": {
+            "model": "wtmod:block/assembly_bench",
+            "y": 180
+        },
+        "facing=north,half=right": {
+            "model": "wtmod:block/assembly_bench_empty"
+        },
+        "facing=east,half=right": {
+            "model": "wtmod:block/assembly_bench_empty"
+        },
+        "facing=south,half=right": {
+            "model": "wtmod:block/assembly_bench_empty"
+        },
+        "facing=west,half=right": {
+            "model": "wtmod:block/assembly_bench_empty"
+        }
+    }
+}

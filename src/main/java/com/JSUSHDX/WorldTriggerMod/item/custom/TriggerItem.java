@@ -111,16 +111,8 @@ public class TriggerItem extends Item {
     }
 
     private static void ProvideChosenTriggers(Player player, ItemStack itemStack) {
-        // TriggerConfigureData config = itemStack.getOrDefault(ModDataComponents.TRIGGER_CONFIGURE, new TriggerConfigureData());
-
-        // Hardcode config
-        TriggerConfigureData config = new TriggerConfigureData(
-                new ArrayList<>(Collections.nCopies(8, null))
-        );
-        config.triggers().set(0, ModItems.KOGETSU_TRIGGER.get());
-        config.triggers().set(1, ModItems.SHIELD_TRIGGER.get());
-        config.triggers().set(4, ModItems.KOGETSU_TRIGGER.get());
-        config.triggers().set(5, ModItems.SHIELD_TRIGGER.get());
+        TriggerConfigureData config = itemStack.getOrDefault(ModDataComponents.TRIGGER_CONFIGURE,
+                new TriggerConfigureData());
 
         int slot = 0;
         for (Item trigger : config.triggers()) {

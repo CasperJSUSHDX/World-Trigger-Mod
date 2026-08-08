@@ -1,6 +1,8 @@
 package com.JSUSHDX.WorldTriggerMod;
 
 import com.JSUSHDX.WorldTriggerMod.blocks.ModBlocks;
+import com.JSUSHDX.WorldTriggerMod.blocks.entity.ModBlockEntities;
+import com.JSUSHDX.WorldTriggerMod.blocks.menu.ModMenuTypes;
 import com.JSUSHDX.WorldTriggerMod.creativemodetab.ModCreativeModTabs;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataAttachment;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
@@ -44,9 +46,12 @@ public class WorldTriggerMod {
 
         ModEntities.register(modEventBus);
         modEventBus.addListener(com.JSUSHDX.WorldTriggerMod.event.ClientModEvents::registerRenderers);
+        modEventBus.addListener(com.JSUSHDX.WorldTriggerMod.event.ClientModEvents::registerScreens);
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
 
         ModDataComponents.register(modEventBus);
         ModDataAttachment.register(modEventBus);

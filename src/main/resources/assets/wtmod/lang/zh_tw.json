@@ -17,5 +17,8 @@
 
   "key.category.wtmod.wtmod_keymap": "境界觸發者 (World Trigger)",
   "key.wtmod.trigger_item": "啟動能力",
-  "key.wtmod.open_trigger_menu": "開啟面板"
+  "key.wtmod.open_trigger_menu": "開啟面板",
+
+  "gui.wtmod.main_triggers": "主觸發器",
+  "gui.wtmod.sub_triggers": "副觸發器"
 }

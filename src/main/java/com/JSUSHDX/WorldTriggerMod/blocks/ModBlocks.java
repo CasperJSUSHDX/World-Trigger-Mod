@@ -2,6 +2,7 @@ package com.JSUSHDX.WorldTriggerMod.blocks;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
+import com.JSUSHDX.WorldTriggerMod.blocks.custom.AssemblyBenchBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -15,9 +16,9 @@ public class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS =
             DeferredRegister.createBlocks(WorldTriggerMod.MODID);
 
-    public static final DeferredBlock<Block> ASSEMBLY_BENCH = registerBlock("assembly_bench",
-            properties -> new Block(
-                    properties.strength(4f).requiresCorrectToolForDrops()));
+    public static final DeferredBlock<AssemblyBenchBlock> ASSEMBLY_BENCH = registerBlock("assembly_bench",
+            properties -> new AssemblyBenchBlock(
+                    properties.strength(4f).requiresCorrectToolForDrops().noOcclusion()));
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, T> function) {
         DeferredBlock<T> toReturn = BLOCKS.registerBlock(name, function);

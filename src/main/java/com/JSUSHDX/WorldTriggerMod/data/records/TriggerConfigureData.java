@@ -7,6 +7,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +15,7 @@ import java.util.List;
 
 public record TriggerConfigureData(List<Item> triggers) {
     public TriggerConfigureData() {
-        this(new ArrayList<>(Collections.nCopies(8, null)));
+        this(new ArrayList<>(Collections.nCopies(8, Items.AIR)));
     }
 
     // Original Codec & Stream codec

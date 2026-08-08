@@ -17,5 +17,8 @@
 
   "key.category.wtmod.wtmod_keymap": "World Trigger",
   "key.wtmod.trigger_item": "Trigger ability",
-  "key.wtmod.open_trigger_menu": "Open trigger menu"
+  "key.wtmod.open_trigger_menu": "Open trigger menu",
+
+  "gui.wtmod.main_triggers": "Main triggers",
+  "gui.wtmod.sub_triggers": "Sub triggers"
 }
