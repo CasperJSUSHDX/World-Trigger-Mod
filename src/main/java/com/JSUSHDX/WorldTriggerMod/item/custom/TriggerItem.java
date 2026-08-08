@@ -4,11 +4,15 @@ import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
 import com.JSUSHDX.WorldTriggerMod.data.records.HealthData;
 import com.JSUSHDX.WorldTriggerMod.data.records.InventoryData;
+import com.JSUSHDX.WorldTriggerMod.data.records.TriggerConfigureData;
+import com.JSUSHDX.WorldTriggerMod.item.ModItems;
+import com.JSUSHDX.WorldTriggerMod.network.CommonPayload;
 import com.JSUSHDX.WorldTriggerMod.util.TriggerStateUtils;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -21,7 +25,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.function.Consumer;
 
 public class TriggerItem extends Item {
@@ -103,6 +110,71 @@ public class TriggerItem extends Item {
         itemStack.remove(ModDataComponents.HEALTH_DATA);
     }
 
+    private static void ProvideChosenTriggers(Player player, ItemStack itemStack) {
+        // TriggerConfigureData config = itemStack.getOrDefault(ModDataComponents.TRIGGER_CONFIGURE, new TriggerConfigureData());
+
+        // Hardcode config
+        TriggerConfigureData config = new TriggerConfigureData(
+                new ArrayList<>(Collections.nCopies(8, null))
+        );
+        config.triggers().set(0, ModItems.KOGETSU_TRIGGER.get());
+        config.triggers().set(1, ModItems.SHIELD_TRIGGER.get());
+        config.triggers().set(4, ModItems.KOGETSU_TRIGGER.get());
+        config.triggers().set(5, ModItems.SHIELD_TRIGGER.get());
+
+        int slot = 0;
+        for (Item trigger : config.triggers()) {
+            if (trigger != null) {
+                player.getInventory().setItem(slot, new ItemStack(trigger));
+            }
+
+            slot++;
+        }
+    }
+
+    private static void changePlayerSelectedSlot(Player player, int slot) {
+        if (player instanceof ServerPlayer serverPlayer) {
+            PacketDistributor.sendToPlayer(serverPlayer, new CommonPayload.SetPlayerSlot(slot));
+        }
+    }
+
+    private static void moveTriggerToLastSlot(Player player, ItemStack itemStack) {
+        // Move trigger to the 9th slot (index 8)
+        int triggerSlot = -1;
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            if (player.getInventory().getItem(i) == itemStack) {
+                triggerSlot = i;
+                break;
+            }
+        }
+
+        itemStack.set(ModDataComponents.USED_SLOT, triggerSlot);
+        if (triggerSlot != -1 && triggerSlot != 8) {
+            player.getInventory().setItem(8, itemStack);
+            player.getInventory().setItem(triggerSlot, ItemStack.EMPTY);
+        }
+    }
+
+    private static void recoverTriggerBeforeSlot (Player player, ItemStack itemStack) {
+        int usedSlot = itemStack.getOrDefault(ModDataComponents.USED_SLOT, 0);
+
+        int triggerSlot = -1;
+        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+            if (player.getInventory().getItem(i) == itemStack) {
+                triggerSlot = i;
+                break;
+            }
+        }
+
+        if (triggerSlot != -1 && usedSlot != -1 && triggerSlot != usedSlot) {
+            player.getInventory().setItem(usedSlot, itemStack);
+            player.getInventory().setItem(triggerSlot, ItemStack.EMPTY);
+        }
+
+        changePlayerSelectedSlot(player, usedSlot);
+        itemStack.remove(ModDataComponents.USED_SLOT);
+    }
+
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide()) {
@@ -113,17 +185,30 @@ public class TriggerItem extends Item {
             if (isOn == null) isOn = false;
 
             if (!isOn) {
+                // Inventory operations
                 savePlayerInventoryToTrigger(player, itemStack);
+                moveTriggerToLastSlot(player, itemStack);
+                changePlayerSelectedSlot(player, 0);
+
+                // Data components operations
                 itemStack.set(ModDataComponents.IS_ON, true);
                 itemStack.set(ModDataComponents.HEALTH_DATA, new HealthData(player.getHealth(), player.getMaxHealth()));
-                player.setHealth(player.getMaxHealth());
-                TriggerStateUtils.toggleState(player);
-            } else {
-                restoreTriggerSavedInventoryToPlayer(player, itemStack);
-                itemStack.set(ModDataComponents.IS_ON, false);
 
                 TriggerStateUtils.toggleState(player);
+
+                player.setHealth(player.getMaxHealth());
+
+                ProvideChosenTriggers(player, itemStack);
+            } else {
+                // Inventory operations
+                recoverTriggerBeforeSlot(player, itemStack);
+                restoreTriggerSavedInventoryToPlayer(player, itemStack);
+
+                // Data components operations
+                itemStack.set(ModDataComponents.IS_ON, false);
                 rewindPlayerHealth(player, itemStack);
+
+                TriggerStateUtils.toggleState(player);
             }
         }
 

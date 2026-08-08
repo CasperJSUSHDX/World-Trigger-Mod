@@ -3,6 +3,7 @@ package com.JSUSHDX.WorldTriggerMod.data;
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
 import com.JSUSHDX.WorldTriggerMod.data.records.HealthData;
 import com.JSUSHDX.WorldTriggerMod.data.records.InventoryData;
+import com.JSUSHDX.WorldTriggerMod.data.records.TriggerConfigureData;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -27,6 +28,10 @@ public class ModDataComponents {
                     booleanBuilder -> booleanBuilder.persistent(Codec.INT)
                             .networkSynchronized(ByteBufCodecs.INT));
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> USED_SLOT =
+            register("used_slot",
+                    booleanBuilder -> booleanBuilder.persistent(Codec.INT)
+                            .networkSynchronized(ByteBufCodecs.INT));
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<HealthData>> HEALTH_DATA =
             register("health_data",
@@ -37,6 +42,11 @@ public class ModDataComponents {
             register("inventory_data",
                     builder -> builder.persistent(InventoryData.CODEC)
                             .networkSynchronized(InventoryData.STREAM_CODEC));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<TriggerConfigureData>> TRIGGER_CONFIGURE =
+            register("trigger_configure",
+                    builder -> builder.persistent(TriggerConfigureData.CODEC)
+                            .networkSynchronized(TriggerConfigureData.STREAM_CODEC));
 
     private static <T>DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,
                                                                                           UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
