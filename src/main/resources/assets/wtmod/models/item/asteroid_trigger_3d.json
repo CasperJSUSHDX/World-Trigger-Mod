@@ -3,8 +3,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"1": "wtmod:item/asteroid_trigger",
-		"particle": "wtmod:item/asteroid_trigger"
+		"1": "wtmod:item/asteroid_trigger_3d",
+		"particle": "wtmod:item/asteroid_trigger_3d"
 	},
 	"elements": [
 		{
