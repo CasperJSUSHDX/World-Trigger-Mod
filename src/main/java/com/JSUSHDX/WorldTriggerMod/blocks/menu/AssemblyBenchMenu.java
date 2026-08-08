@@ -8,18 +8,18 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.items.ItemStackHandler;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
+import com.JSUSHDX.WorldTriggerMod.blocks.menu.base.BaseMachineMenu;
 
-@SuppressWarnings("removal")
-public class AssemblyBenchMenu extends AbstractContainerMenu {
+public class AssemblyBenchMenu extends BaseMachineMenu {
     private final AssemblyBenchBlockEntity blockEntity;
     private final ContainerLevelAccess access;
 
-    // GUI layout constants (pixel positions within the GUI texture)
+    // GUI layout constants
     private static final int TRIGGER_SLOT_X = 80;
     private static final int TRIGGER_SLOT_Y = 65;
 
@@ -32,54 +32,34 @@ public class AssemblyBenchMenu extends AbstractContainerMenu {
     private static final int PLAYER_INV_Y = 128;
     private static final int PLAYER_HOTBAR_Y = 186;
 
-    /**
-     * Client-side constructor — called from MenuType factory.
-     */
     public AssemblyBenchMenu(int containerId, Inventory playerInventory, RegistryFriendlyByteBuf data) {
         this(containerId, playerInventory, getBlockEntity(playerInventory, data));
     }
 
-    /**
-     * Server-side constructor — called from BlockEntity.createMenu().
-     */
     public AssemblyBenchMenu(int containerId, Inventory playerInventory, AssemblyBenchBlockEntity blockEntity) {
-        super(ModMenuTypes.ASSEMBLY_BENCH_MENU.get(), containerId);
+        super(ModMenuTypes.ASSEMBLY_BENCH_MENU.get(), containerId, blockEntity, AssemblyBenchBlockEntity.INVENTORY_SIZE);
         this.blockEntity = blockEntity;
         this.access = ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos());
 
-        ItemStackHandler handler = blockEntity.getInventory();
+        ItemStacksResourceHandler handler = blockEntity.getInventory();
 
-        // === Custom Slots (0-8) ===
+        // Slot 0: Trigger Slot
+        addSlot(new TriggerSlot(handler, AssemblyBenchBlockEntity.TRIGGER_SLOT, TRIGGER_SLOT_X, TRIGGER_SLOT_Y));
 
-        // Slot 0: Trigger Slot (center) — only accepts TriggerItem
-        addSlot(new TriggerSlot(handler, AssemblyBenchBlockEntity.TRIGGER_SLOT,
-                TRIGGER_SLOT_X, TRIGGER_SLOT_Y));
-
-        // Slots 1-4: Main Slots (left column)
+        // Slots 1-4: Main Slots
         for (int i = 0; i < 4; i++) {
             addSlot(new ConfigSlot(handler, AssemblyBenchBlockEntity.MAIN_SLOT_START + i,
                     MAIN_SLOT_X, CONFIG_SLOT_START_Y + i * CONFIG_SLOT_SPACING));
         }
 
-        // Slots 5-8: Sub Slots (right column)
+        // Slots 5-8: Sub Slots
         for (int i = 0; i < 4; i++) {
             addSlot(new ConfigSlot(handler, AssemblyBenchBlockEntity.SUB_SLOT_START + i,
                     SUB_SLOT_X, CONFIG_SLOT_START_Y + i * CONFIG_SLOT_SPACING));
         }
 
-        // === Player Inventory (slots 9-35) ===
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 9; col++) {
-                addSlot(new Slot(playerInventory, col + row * 9 + 9,
-                        PLAYER_INV_X + col * 18, PLAYER_INV_Y + row * 18));
-            }
-        }
-
-        // === Player Hotbar (slots 36-44) ===
-        for (int col = 0; col < 9; col++) {
-            addSlot(new Slot(playerInventory, col,
-                    PLAYER_INV_X + col * 18, PLAYER_HOTBAR_Y));
-        }
+        // Player Inventory and Hotbar (Standardized by BaseMachineMenu)
+        addPlayerInventory(playerInventory, PLAYER_INV_X, PLAYER_INV_Y, PLAYER_HOTBAR_Y);
     }
 
     private static AssemblyBenchBlockEntity getBlockEntity(Inventory playerInventory, RegistryFriendlyByteBuf data) {
@@ -91,69 +71,8 @@ public class AssemblyBenchMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int slotIndex) {
-        Slot slot = this.slots.get(slotIndex);
-        if (!slot.hasItem()) {
-            return ItemStack.EMPTY;
-        }
-
-        ItemStack slotStack = slot.getItem();
-        ItemStack originalStack = slotStack.copy();
-
-        // Custom slots (0-8) → Player inventory (9-44)
-        if (slotIndex < 9) {
-            if (!this.moveItemStackTo(slotStack, 9, 45, true)) {
-                return ItemStack.EMPTY;
-            }
-        }
-        // Player inventory (9-44) → Custom slots (0-8)
-        else {
-            // Try trigger slot first if it's a TriggerItem
-            if (slotStack.getItem() instanceof TriggerItem) {
-                if (!this.moveItemStackTo(slotStack, 0, 1, false)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-            // Try main/sub slots if it's a trigger-type item
-            else if (AssemblyBenchBlockEntity.isTriggerTypeItem(slotStack)) {
-                if (!this.moveItemStackTo(slotStack, 1, 9, false)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-            // Move between inventory and hotbar
-            else if (slotIndex < 36) {
-                if (!this.moveItemStackTo(slotStack, 36, 45, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else {
-                if (!this.moveItemStackTo(slotStack, 9, 36, false)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-        }
-
-        if (slotStack.isEmpty()) {
-            slot.set(ItemStack.EMPTY);
-        } else {
-            slot.setChanged();
-        }
-
-        if (slotStack.getCount() == originalStack.getCount()) {
-            return ItemStack.EMPTY;
-        }
-
-        slot.onTake(player, slotStack);
-        return originalStack;
-    }
-
-    @Override
     public boolean stillValid(Player player) {
         return AbstractContainerMenu.stillValid(this.access, player, ModBlocks.ASSEMBLY_BENCH.get());
-    }
-
-    @Override
-    public void removed(Player player) {
-        super.removed(player);
     }
 
     public AssemblyBenchBlockEntity getBlockEntity() {
@@ -162,46 +81,29 @@ public class AssemblyBenchMenu extends AbstractContainerMenu {
 
     // ==================== Custom Slot Classes ====================
 
-    /**
-     * Trigger Slot — only accepts TriggerItem.
-     * Handles config load on placement and config save on removal.
-     */
-    private class TriggerSlot extends SlotItemHandler {
-        public TriggerSlot(ItemStackHandler handler, int index, int x, int y) {
-            super(handler, index, x, y);
+    private class TriggerSlot extends ResourceHandlerSlot {
+        public TriggerSlot(ItemStacksResourceHandler handler, int index, int x, int y) {
+            super(handler, handler::set, index, x, y);
         }
 
         @Override
         public boolean mayPlace(ItemStack stack) {
             return stack.getItem() instanceof TriggerItem;
         }
-
     }
 
-    /**
-     * Config Slot (Main/Sub) — only accepts trigger-type items.
-     * Only interactable when a TRIGGER is in the center slot.
-     */
-    private class ConfigSlot extends SlotItemHandler {
-        public ConfigSlot(ItemStackHandler handler, int index, int x, int y) {
-            super(handler, index, x, y);
+    private class ConfigSlot extends ResourceHandlerSlot {
+        public ConfigSlot(ItemStacksResourceHandler handler, int index, int x, int y) {
+            super(handler, handler::set, index, x, y);
         }
 
         @Override
         public boolean mayPlace(ItemStack stack) {
-            // Only allow placement if there's a trigger in the center slot
-            ItemStack triggerStack = blockEntity.getInventory()
-                    .getStackInSlot(AssemblyBenchBlockEntity.TRIGGER_SLOT);
-            if (triggerStack.isEmpty()) {
+            ItemResource res = blockEntity.getInventory().getResource(AssemblyBenchBlockEntity.TRIGGER_SLOT);
+            if (res == null || res.isEmpty()) {
                 return false;
             }
-            return AssemblyBenchBlockEntity.isTriggerTypeItem(stack);
-        }
-
-        @Override
-        public boolean mayPickup(Player player) {
-            // Allow pickup even without trigger (for edge cases)
-            return true;
+            return AssemblyBenchBlockEntity.isTriggerTypeItem(stack.getItem());
         }
 
         @Override
