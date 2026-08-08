@@ -26,6 +26,7 @@ public class ModCreativeModTabs {
                                 output.accept(ModBlocks.ASSEMBLY_BENCH);
                                 output.accept(ModItems.SHIELD_TRIGGER);
                                 output.accept(ModItems.ASTEROID_TRIGGER);
+                                output.accept(ModItems.KOGETSU_TRIGGER);
                             }).build());
 
     public static void register(IEventBus eventBus) {

@@ -1,5 +1,6 @@
 package com.JSUSHDX.WorldTriggerMod.event;
 
+import com.JSUSHDX.WorldTriggerMod.client.renderer.entity.ShieldEntityRenderer;
 import com.JSUSHDX.WorldTriggerMod.client.renderer.entity.TrionBulletRenderer;
 import com.JSUSHDX.WorldTriggerMod.entity.ModEntities;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -9,5 +10,6 @@ public class ClientModEvents {
     @SubscribeEvent
     public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.TRION_BULLET.get(), TrionBulletRenderer::new);
+        event.registerEntityRenderer(ModEntities.SHIELD_ENTITY.get(), ShieldEntityRenderer::new);
     }
 }

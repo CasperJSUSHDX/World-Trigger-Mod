@@ -3,8 +3,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "wtmod:item/shield_trigger",
-		"particle": "wtmod:item/shield_trigger"
+		"0": "wtmod:item/shield_trigger_3d",
+		"particle": "wtmod:item/shield_trigger_3d"
 	},
 	"elements": [
 		{

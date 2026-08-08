@@ -2,13 +2,20 @@
   "item.wtmod.trigger": "觸發",
   "item.wtmod.shield_trigger": "盾",
   "item.wtmod.asteroid_trigger": "普通彈",
+  "item.wtmod.kogetsu_trigger": "弧月",
 
   "block.wtmod.assembly_bench": "裝配台",
 
   "creativetab.wtmod.wt_items": "境界觸發者",
 
   "tooltip.wtmod.is_on": "狀態: %s",
-  "tooltip.wtmod.mode": "模式: %s",
   "message.wtmod.status_on": "啟動 %1$s",
-  "message.wtmod.status_off": "關閉 %1$s"
+  "message.wtmod.status_off": "關閉 %1$s",
+  "tooltip.wtmod.mode": "模式: %s",
+  "tooltip.wtmod.asteroid_mode0": "射擊",
+  "tooltip.wtmod.asteroid_mode4": "放置",
+
+  "key.category.wtmod.wtmod_keymap": "境界觸發者 (World Trigger)",
+  "key.wtmod.trigger_item": "啟動能力",
+  "key.wtmod.open_trigger_menu": "開啟面板"
 }

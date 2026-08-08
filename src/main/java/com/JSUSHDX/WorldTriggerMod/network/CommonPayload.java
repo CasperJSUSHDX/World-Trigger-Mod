@@ -2,6 +2,7 @@ package com.JSUSHDX.WorldTriggerMod.network;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
+import com.JSUSHDX.WorldTriggerMod.item.custom.AsteroidTriggerItem;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -35,4 +36,51 @@ public class CommonPayload {
             return TYPE;
         }
     };
+
+    public record TriggerPlacedBullet() implements CustomPacketPayload {
+        public static final TriggerPlacedBullet INSTANCE = new TriggerPlacedBullet();
+
+        // Payload ID
+        public static final CustomPacketPayload.Type<TriggerPlacedBullet> TYPE =
+                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "trigger_placed_bullet"));
+
+        public static final StreamCodec<ByteBuf, TriggerPlacedBullet> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+
+        public static void handler(final TriggerPlacedBullet data, final IPayloadContext context) {
+            context.enqueueWork(() -> {
+                var player = context.player();
+
+                AsteroidTriggerItem.triggerPlacedBullets(player);
+            });
+        }
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public record SetPlayerSlot(int slot) implements CustomPacketPayload {
+        // Payload ID
+        public static final CustomPacketPayload.Type<SetPlayerSlot> TYPE =
+                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "set_player_slot"));
+
+        public static final StreamCodec<ByteBuf, SetPlayerSlot> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, SetPlayerSlot::slot,
+                SetPlayerSlot::new
+        );
+
+        public static void handler(final SetPlayerSlot data, final IPayloadContext context) {
+            context.enqueueWork(() -> {
+                var player = context.player();
+
+                player.getInventory().setSelectedSlot(data.slot());
+            });
+        }
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
 }

@@ -9,6 +9,8 @@ import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.data.PackOutput;
 
+import static com.JSUSHDX.WorldTriggerMod.datagen.custom.HybridItemModel.generateHybridItem;
+
 public class ModModelProvider extends ModelProvider {
     public ModModelProvider(PackOutput output) {
         super(output, WorldTriggerMod.MODID);
@@ -18,8 +20,9 @@ public class ModModelProvider extends ModelProvider {
     protected void registerModels(BlockModelGenerators blockModels, ItemModelGenerators itemModels) {
         // Items
         itemModels.generateFlatItem(ModItems.TRIGGER.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(ModItems.SHIELD_TRIGGER.get(), ModelTemplates.FLAT_ITEM);
-        itemModels.generateFlatItem(ModItems.ASTEROID_TRIGGER.get(), ModelTemplates.FLAT_ITEM);
+        generateHybridItem(itemModels, ModItems.SHIELD_TRIGGER.get());
+        generateHybridItem(itemModels, ModItems.ASTEROID_TRIGGER.get());
+        generateHybridItem(itemModels, ModItems.KOGETSU_TRIGGER.get());
 
         // BLOCKS
         blockModels.createTrivialCube(ModBlocks.ASSEMBLY_BENCH.get());

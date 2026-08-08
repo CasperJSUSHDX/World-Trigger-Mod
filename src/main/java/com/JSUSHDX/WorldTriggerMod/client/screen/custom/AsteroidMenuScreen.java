@@ -1,14 +1,14 @@
 package com.JSUSHDX.WorldTriggerMod.client.screen.custom;
 
 import com.JSUSHDX.WorldTriggerMod.client.screen.BaseTriggerMenuScreen;
+import com.JSUSHDX.WorldTriggerMod.network.CommonPayload;
 import net.minecraft.network.chat.Component;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class AsteroidMenuScreen extends BaseTriggerMenuScreen {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     public AsteroidMenuScreen() {
         super(Component.literal("Asteroid Menu"));
     }
@@ -45,15 +45,13 @@ public class AsteroidMenuScreen extends BaseTriggerMenuScreen {
     @Override
     public void onSlotClicked(int slotIndex) {
         if (slotIndex == 0) {
-            LOGGER.info("Asteroid Menu: Selected Normal Mode (Index 0)");
             if (this.minecraft != null && this.minecraft.player != null) {
-                this.minecraft.player.sendSystemMessage(Component.literal("Selected Normal Mode"));
+                ClientPacketDistributor.sendToServer(new CommonPayload.ChangeMode(slotIndex));
             }
             this.onClose();
         } else if (slotIndex == 4) {
-            LOGGER.info("Asteroid Menu: Selected Place Mode (Index 4)");
             if (this.minecraft != null && this.minecraft.player != null) {
-                this.minecraft.player.sendSystemMessage(Component.literal("Selected Place Mode"));
+                ClientPacketDistributor.sendToServer(new CommonPayload.ChangeMode(slotIndex));
             }
             this.onClose();
         }
