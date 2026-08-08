@@ -8,7 +8,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class CommonPayload {
@@ -52,6 +51,30 @@ public class CommonPayload {
                 var player = context.player();
 
                 AsteroidTriggerItem.triggerPlacedBullets(player);
+            });
+        }
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public record SetPlayerSlot(int slot) implements CustomPacketPayload {
+        // Payload ID
+        public static final CustomPacketPayload.Type<SetPlayerSlot> TYPE =
+                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "set_player_slot"));
+
+        public static final StreamCodec<ByteBuf, SetPlayerSlot> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, SetPlayerSlot::slot,
+                SetPlayerSlot::new
+        );
+
+        public static void handler(final SetPlayerSlot data, final IPayloadContext context) {
+            context.enqueueWork(() -> {
+                var player = context.player();
+
+                player.getInventory().setSelectedSlot(data.slot());
             });
         }
 
