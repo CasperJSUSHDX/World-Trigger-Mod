@@ -79,6 +79,30 @@ public class TriggerItem extends Item {
         itemStack.remove(ModDataComponents.INVENTORY_DATA);
     }
 
+    private static void rewindPlayerHealth(Player player, ItemStack itemStack) {
+        HealthData data = itemStack.getOrDefault(ModDataComponents.HEALTH_DATA, new HealthData(20.0f, 20.0f));
+        // Set max health
+        AttributeInstance maxHealthAttr = player.getAttribute(Attributes.MAX_HEALTH);
+        Identifier modifierID = Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "trigger_rewind_max_health");
+        if (maxHealthAttr != null) {
+            maxHealthAttr.removeModifier(modifierID);
+            double currentMaxHealth = maxHealthAttr.getValue();
+            double delta = data.max() - currentMaxHealth;
+            if (delta > 0) {
+                AttributeModifier modifier = new AttributeModifier(
+                        modifierID,
+                        delta,
+                        AttributeModifier.Operation.ADD_VALUE
+                );
+                maxHealthAttr.addPermanentModifier(modifier);
+            }
+        }
+
+        // Heal to record health
+        player.setHealth(data.current());
+        itemStack.remove(ModDataComponents.HEALTH_DATA);
+    }
+
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide()) {
@@ -98,29 +122,9 @@ public class TriggerItem extends Item {
                 restoreTriggerSavedInventoryToPlayer(player, itemStack);
                 itemStack.set(ModDataComponents.IS_ON, false);
 
-                HealthData data = itemStack.getOrDefault(ModDataComponents.HEALTH_DATA, new HealthData(20.0f, 20.0f));
-                // Set max health
-                AttributeInstance maxHealthAttr = player.getAttribute(Attributes.MAX_HEALTH);
-                Identifier modifierID = Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "trigger_rewind_max_health");
-                if (maxHealthAttr != null) {
-                    maxHealthAttr.removeModifier(modifierID);
-                    double currentMaxHealth = maxHealthAttr.getValue();
-                    double delta = data.max() - currentMaxHealth;
-                    if (delta > 0) {
-                        AttributeModifier modifier = new AttributeModifier(
-                                modifierID,
-                                delta,
-                                AttributeModifier.Operation.ADD_VALUE
-                        );
-                        maxHealthAttr.addPermanentModifier(modifier);
-                    }
-                }
                 TriggerStateUtils.toggleState(player);
-                // Heal to record health
-                player.setHealth(data.current());
-                itemStack.remove(ModDataComponents.HEALTH_DATA);
+                rewindPlayerHealth(player, itemStack);
             }
-
         }
 
         return InteractionResult.SUCCESS;
