@@ -25,8 +25,10 @@ public class ModModelProvider extends ModelProvider {
         generateHybridItem(itemModels, ModItems.KOGETSU_TRIGGER.get());
 
         // BLOCKS
-        // Assembly bench uses custom blockstates/models (facing × half variants)
-        // so we skip automatic model generation here.
-
+        // We use createTrivialCube here to satisfy the ModelProvider validation.
+        // The actual complex models for assembly_bench and recall_bed are provided manually
+        // in src/main/resources, which overrides these generated dummy files.
+        blockModels.createTrivialCube(ModBlocks.ASSEMBLY_BENCH.get());
+        blockModels.createTrivialCube(ModBlocks.RECALL_BED.get());
     }
 }

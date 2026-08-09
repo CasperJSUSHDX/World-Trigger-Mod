@@ -1,6 +1,7 @@
 package com.JSUSHDX.WorldTriggerMod.blocks;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.blocks.custom.RecallBedBlock;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import com.JSUSHDX.WorldTriggerMod.blocks.custom.AssemblyBenchBlock;
 import net.minecraft.world.item.BlockItem;
@@ -18,6 +19,10 @@ public class ModBlocks {
 
     public static final DeferredBlock<AssemblyBenchBlock> ASSEMBLY_BENCH = registerBlock("assembly_bench",
             properties -> new AssemblyBenchBlock(
+                    properties.strength(4f).requiresCorrectToolForDrops().noOcclusion()));
+
+    public static final DeferredBlock<RecallBedBlock> RECALL_BED = registerBlock("recall_bed",
+            properties -> new RecallBedBlock(
                     properties.strength(4f).requiresCorrectToolForDrops().noOcclusion()));
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, T> function) {
