@@ -20,5 +20,8 @@
   "key.wtmod.open_trigger_menu": "開啟面板",
 
   "gui.wtmod.main_triggers": "主觸發器",
-  "gui.wtmod.sub_triggers": "副觸發器"
+  "gui.wtmod.sub_triggers": "副觸發器",
+  "gui.wtmod.category.weapon": "武器類",
+  "gui.wtmod.category.defense": "防禦類",
+  "gui.wtmod.category.optional": "選配"
 }

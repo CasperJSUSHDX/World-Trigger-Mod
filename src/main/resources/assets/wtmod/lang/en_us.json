@@ -20,5 +20,8 @@
   "key.wtmod.open_trigger_menu": "Open trigger menu",
 
   "gui.wtmod.main_triggers": "Main triggers",
-  "gui.wtmod.sub_triggers": "Sub triggers"
+  "gui.wtmod.sub_triggers": "Sub triggers",
+  "gui.wtmod.category.weapon": "Weapons",
+  "gui.wtmod.category.defense": "Defenses",
+  "gui.wtmod.category.optional": "Optionals"
 }

@@ -16,6 +16,10 @@ public class ModTags {
     }
 
     public static class Items {
+        public static final TagKey<Item> WEAPON_TRIGGERS = createTag("weapon_triggers");
+        public static final TagKey<Item> DEFENSE_TRIGGERS = createTag("defense_triggers");
+        public static final TagKey<Item> OPTIONAL_TRIGGERS = createTag("optional_triggers");
+
         private static TagKey<Item> createTag(String id) {
             return ItemTags.create(Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, id));
         }
