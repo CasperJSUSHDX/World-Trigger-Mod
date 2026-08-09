@@ -27,6 +27,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
@@ -171,13 +172,26 @@ public class TriggerItem extends Item {
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
+
+        // Unbind recall pos
+        if (player.isShiftKeyDown() && !level.isClientSide()) {
+            itemStack.remove(ModDataComponents.TRIGGER_RECALL_POS);
+            player.sendSystemMessage(Component.translatable("message.wtmod.unbind_recall_pos"));
+            return InteractionResult.SUCCESS;
+        }
+
         if (!level.isClientSide()) {
-            ItemStack itemStack = player.getItemInHand(hand);
             boolean isOn = itemStack.getOrDefault(ModDataComponents.IS_ON, false);
             TrionData data = player.getData(ModDataAttachment.TRION_DATA);
-            boolean canMorph = data.trion() >= data.maxTrion() * 0.8;
 
-            if (!isOn && canMorph) {
+            if (!isOn && data.trion() < data.maxTrion() * 0.8) {
+                // Not enough Trion to transform
+                player.sendSystemMessage(Component.translatable("message.wtmod.trion_not_enough"));
+                return InteractionResult.SUCCESS;
+            }
+
+            if (!isOn) {
                 // Inventory operations
                 savePlayerInventoryToTrigger(player, itemStack);
                 moveTriggerToLastSlot(player, itemStack);
@@ -217,6 +231,12 @@ public class TriggerItem extends Item {
         player.clearFreeze();
 
         TriggerStateUtils.toggleState(player);
+
+        // Teleport to recall bed
+        Vec3 position = itemStack.get(ModDataComponents.TRIGGER_RECALL_POS);
+        if (position != null) {
+            player.teleportTo(position.x, position.y, position.z);
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -47,6 +48,11 @@ public class ModDataComponents {
             register("trigger_configure",
                     builder -> builder.persistent(TriggerConfigureData.CODEC)
                             .networkSynchronized(TriggerConfigureData.STREAM_CODEC));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Vec3>> TRIGGER_RECALL_POS =
+            register("trigger_recall_pos",
+                    vec3Builder -> vec3Builder.persistent(Vec3.CODEC)
+                            .networkSynchronized(Vec3.STREAM_CODEC));
 
     private static <T>DeferredHolder<DataComponentType<?>, DataComponentType<T>> register(String name,
                                                                                           UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
