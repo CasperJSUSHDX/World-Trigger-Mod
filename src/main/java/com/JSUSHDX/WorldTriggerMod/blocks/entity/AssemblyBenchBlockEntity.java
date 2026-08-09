@@ -135,6 +135,7 @@ public class AssemblyBenchBlockEntity extends BaseMachineBlockEntity implements 
         }
 
         triggerStack.set(ModDataComponents.TRIGGER_CONFIGURE, new TriggerConfigureData(triggers));
+        setSlotStack(TRIGGER_SLOT, triggerStack);
         setChanged();
     }
 
