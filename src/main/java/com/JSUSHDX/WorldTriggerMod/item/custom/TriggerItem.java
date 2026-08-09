@@ -1,7 +1,9 @@
 package com.JSUSHDX.WorldTriggerMod.item.custom;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.data.ModDataAttachment;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
+import com.JSUSHDX.WorldTriggerMod.data.custom.TrionData;
 import com.JSUSHDX.WorldTriggerMod.data.records.HealthData;
 import com.JSUSHDX.WorldTriggerMod.data.records.InventoryData;
 import com.JSUSHDX.WorldTriggerMod.data.records.TriggerConfigureData;
@@ -171,12 +173,11 @@ public class TriggerItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide()) {
             ItemStack itemStack = player.getItemInHand(hand);
-            Boolean isOn = itemStack.get(ModDataComponents.IS_ON);
-            
-            // default to false if null
-            if (isOn == null) isOn = false;
+            boolean isOn = itemStack.getOrDefault(ModDataComponents.IS_ON, false);
+            TrionData data = player.getData(ModDataAttachment.TRION_DATA);
+            boolean canMorph = data.trion() >= data.maxTrion() * 0.8;
 
-            if (!isOn) {
+            if (!isOn && canMorph) {
                 // Inventory operations
                 savePlayerInventoryToTrigger(player, itemStack);
                 moveTriggerToLastSlot(player, itemStack);
@@ -192,19 +193,30 @@ public class TriggerItem extends Item {
 
                 ProvideChosenTriggers(player, itemStack);
             } else {
-                // Inventory operations
-                recoverTriggerBeforeSlot(player, itemStack);
-                restoreTriggerSavedInventoryToPlayer(player, itemStack);
-
-                // Data components operations
-                itemStack.set(ModDataComponents.IS_ON, false);
-                rewindPlayerHealth(player, itemStack);
-
-                TriggerStateUtils.toggleState(player);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    bailOut(serverPlayer, itemStack);
+                }
             }
         }
 
         return InteractionResult.SUCCESS;
+    }
+
+    public static void bailOut(ServerPlayer player, ItemStack itemStack) {
+        // Inventory operations
+        recoverTriggerBeforeSlot(player, itemStack);
+        restoreTriggerSavedInventoryToPlayer(player, itemStack);
+
+        // Data components operations
+        itemStack.set(ModDataComponents.IS_ON, false);
+        rewindPlayerHealth(player, itemStack);
+
+        // Clear effects
+        player.removeAllEffects();
+        player.clearFire();
+        player.clearFreeze();
+
+        TriggerStateUtils.toggleState(player);
     }
 
     @Override
