@@ -32,7 +32,7 @@ public class RecallBedBlock extends Block {
             Vec3 position = Vec3.atCenterOf(pos).add(0, 1, 0);
             itemStack.set(ModDataComponents.TRIGGER_RECALL_POS, position);
 
-            Component msg = Component.translatable("message.wtmod.record_pos");
+            Component msg = Component.translatable("message.wtmod.bind_recall_bed", position.x, position.y, position.z);
             player.sendSystemMessage(msg);
         }
 
