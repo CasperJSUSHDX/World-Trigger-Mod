@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": "#minecraft:beds",
+    "I": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "IBI",
+    "III"
+  ],
+  "result": {
+    "id": "wtmod:recall_bed"
+  }
+}

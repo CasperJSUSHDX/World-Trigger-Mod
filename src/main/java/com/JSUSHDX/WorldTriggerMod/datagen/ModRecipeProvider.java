@@ -1,12 +1,13 @@
 package com.JSUSHDX.WorldTriggerMod.datagen;
 
-import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.blocks.ModBlocks;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 
 import java.util.concurrent.CompletableFuture;
@@ -43,6 +44,23 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('B', Items.REDSTONE)
                 .unlockedBy(getHasName(ModItems.TRIGGER.get()), has(ModItems.TRIGGER))
                 .group("worldtrigger")
+                .save(output);
+
+        shaped(RecipeCategory.MISC, ModBlocks.ASSEMBLY_BENCH.get())
+                .pattern("III")
+                .pattern("ICI")
+                .pattern("III")
+                .define('I', Items.IRON_INGOT)
+                .define('C', Items.CRAFTING_TABLE)
+                .unlockedBy("has_trigger", has(ModItems.TRIGGER))
+                .save(output);
+
+        shaped(RecipeCategory.MISC, ModBlocks.RECALL_BED.get())
+                .pattern("IBI")
+                .pattern("III")
+                .define('I', Items.IRON_INGOT)
+                .define('B', ItemTags.BEDS)
+                .unlockedBy("has_trigger", has(ModItems.TRIGGER))
                 .save(output);
     }
 }
