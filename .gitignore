@@ -42,3 +42,11 @@ repo/
 /base.pixil
 /base.png
 /tools/
+
+### Claude Code ###
+.claude/settings.local.json
+CLAUDE.local.md
+.claude/CLAUDE.local.md
+.claude/memory/
+.claude/logs/
+.claude/*.log

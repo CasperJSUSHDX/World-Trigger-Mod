@@ -1,26 +1,49 @@
-Installation information
-=======
+# World Trigger Mod (境界觸發者模組)
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
+歡迎來到 **World Trigger Mod**！這是一個基於 NeoForge 開發的 Minecraft 模組，將日本知名動漫《境界觸發者 (World Trigger)》中的戰鬥系統與武器完美移植到了 Minecraft 的世界中。
 
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
+身為 Border 的一員，你將學會如何運用自身的「觸力能 (Trion)」，裝備各式各樣的觸發器 (Triggers) 來武裝自己，並在這個充滿危機的世界中生存與戰鬥！
 
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
+---
 
-Mapping Names:
-============
+## 🌟 模組簡介 (About the Mod)
 
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
+本模組的核心在於還原原作中豐富且多樣的戰鬥風格。你不僅能使用近戰武器與敵人交鋒，還能運用射手觸發器進行遠程壓制，甚至張開護盾抵禦傷害。透過自訂的環形選單，你可以自由搭配「主 (Main)」與「副 (Sub)」觸發器，打造專屬於你的戰鬥配置！
 
-Additional Resources:
-==========
+### 核心玩法特色：
+- **觸力能系統 (Trion System)**：所有的觸發器都需要消耗你的 Trion 能量。在戰鬥中時刻注意你的 Trion 存量，它是你生存與輸出的關鍵！
+- **已實裝的觸發器 (Triggers)**：
+  - ️ **弧月 (Kogetsu)**：經典的萬能型近戰武器，擁有極高的攻擊力與平衡性。
+  -  **小行星 (Asteroid)**：泛用型射手觸發器，可以自由切換「射擊」或「放置」模式，對敵人造成穩定的遠程傷害。
+  -  **盾 (Shield)**：防禦型觸發器，能夠為你抵擋致命的攻擊。
+- **自由的戰鬥配置**：按下快捷鍵開啟專屬的**觸發器選單**，將武器裝備至主/副插槽，隨時根據戰況切換你的戰鬥風格。
 
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+---
+
+## 🛠️ 如何開始遊玩 (Getting Started)
+
+1. **取得你的第一個觸發器**：
+   在遊戲中，你需要先打造一個 **組裝台 (Assembly Bench)**。這是所有 Border 隊員的核心工作台，你可以在這裡配置與調整你的觸發器。
+
+2. **設定歸還點**：
+   製作一張 **歸還床 (Recall Bed)** 並將其綁定。當你在外探索遇到危險時，這將是你最安全的撤退點。
+
+3. **武裝自己**：
+   準備好你的觸發器，啟動它們，看著你的 Trion 能量轉換為強大的武器，準備迎接挑戰！
+
+---
+
+## 📦 安裝說明 (Installation)
+
+1. 確保你已安裝對應版本的 [NeoForge](https://neoforged.net/)。
+2. 將下載的 `World-Trigger-Mod-x.x.x.jar` 放入 Minecraft 遊戲目錄下的 `mods` 資料夾。
+3. 啟動遊戲，開始你的 Border 任務！
+
+---
+
+## 💻 開發與貢獻 (Development)
+
+如果您是開發者，歡迎協助我們完善這個模組！
+- 複製此原始碼庫 (Clone the repository)。
+- 在終端機執行 `./gradlew build` 進行編譯。
+- 編譯完成的檔案會生成在 `build/libs` 資料夾中。
