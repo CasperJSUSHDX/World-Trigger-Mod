@@ -62,5 +62,15 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('B', ItemTags.BEDS)
                 .unlockedBy("has_trigger", has(ModItems.TRIGGER))
                 .save(output);
+
+        shaped(RecipeCategory.MISC, ModBlocks.OPERATORS_TERMINAL.get())
+                .pattern(" I ")
+                .pattern("IGI")
+                .pattern(" R ")
+                .define('I', Items.IRON_INGOT)
+                .define('G', Items.GLASS_PANE)
+                .define('R', Items.REDSTONE)
+                .unlockedBy("has_trigger", has(ModItems.TRIGGER))
+                .save(output);
     }
 }

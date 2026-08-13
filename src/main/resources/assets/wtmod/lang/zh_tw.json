@@ -7,6 +7,7 @@
   "block.wtmod.assembly_bench": "裝配台",
   "block.wtmod.recall_bed": "撤離床",
   "block.wtmod.mother_trigger": "母觸發",
+  "block.wtmod.operators_terminal": "作業員終端",
 
   "creativetab.wtmod.wt_items": "境界觸發者",
 
@@ -17,6 +18,8 @@
   "message.wtmod.out_of_mother_trigger_range": "距離母觸發太遠，無法使用.",
   "message.wtmod.unbind_recall_pos": "取消與撤離床的連接.",
   "message.wtmod.trion_not_enough": "Trion 量不足以啟動",
+  "message.wtmod.terminal_registered": "%1$s 已於終端機註冊.",
+  "message.wtmod.terminal_no_entries": "尚無已註冊的隊員.",
   "tooltip.wtmod.mode": "模式: %s",
   "tooltip.wtmod.asteroid_mode0": "射擊",
   "tooltip.wtmod.asteroid_mode4": "放置",

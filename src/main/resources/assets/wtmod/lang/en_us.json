@@ -7,6 +7,7 @@
   "block.wtmod.assembly_bench": "Assembly bench",
   "block.wtmod.recall_bed": "Recall bed",
   "block.wtmod.mother_trigger": "Mother Trigger",
+  "block.wtmod.operators_terminal": "Operator's Terminal",
 
   "creativetab.wtmod.wt_items": "World Trigger",
 
@@ -17,6 +18,8 @@
   "message.wtmod.out_of_mother_trigger_range": "Too far from a Mother Trigger to operate this.",
   "message.wtmod.unbind_recall_pos": "Unbind connection with your recall bed.",
   "message.wtmod.trion_not_enough": "Not enough trion to transform.",
+  "message.wtmod.terminal_registered": "%1$s registered with the terminal.",
+  "message.wtmod.terminal_no_entries": "No agents registered.",
   "tooltip.wtmod.mode": "Mode: %s",
   "tooltip.wtmod.asteroid_mode0": "Shooting",
   "tooltip.wtmod.asteroid_mode4": "Placing",

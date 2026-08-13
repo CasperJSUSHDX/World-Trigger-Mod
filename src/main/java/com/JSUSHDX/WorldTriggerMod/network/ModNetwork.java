@@ -15,5 +15,6 @@ public class ModNetwork {
         registrar.playToServer(CommonPayload.ChangeMode.TYPE, CommonPayload.ChangeMode.STREAM_CODEC, CommonPayload.ChangeMode::handler);
         registrar.playToServer(CommonPayload.TriggerPlacedBullet.TYPE, CommonPayload.TriggerPlacedBullet.STREAM_CODEC, CommonPayload.TriggerPlacedBullet::handler);
         registrar.playToClient(CommonPayload.SetPlayerSlot.TYPE, CommonPayload.SetPlayerSlot.STREAM_CODEC, CommonPayload.SetPlayerSlot::handler);
+        registrar.playToServer(CommonPayload.RemoveTerminalEntry.TYPE, CommonPayload.RemoveTerminalEntry.STREAM_CODEC, CommonPayload.RemoveTerminalEntry::handler);
     }
 }

@@ -20,6 +20,10 @@ public class ModMenuTypes {
             MOTHER_TRIGGER_MENU = MENUS.register("mother_trigger_menu",
                     () -> IMenuTypeExtension.create(MotherTriggerMenu::new));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<OperatorsTerminalMenu>>
+            OPERATORS_TERMINAL_MENU = MENUS.register("operators_terminal_menu",
+                    () -> IMenuTypeExtension.create(OperatorsTerminalMenu::new));
+
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);
     }

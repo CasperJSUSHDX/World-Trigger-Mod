@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "wtmod:block/operators_terminal" }
+  }
+}
