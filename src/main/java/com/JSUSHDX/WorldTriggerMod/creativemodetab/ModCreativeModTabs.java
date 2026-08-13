@@ -28,6 +28,7 @@ public class ModCreativeModTabs {
                                 output.accept(ModItems.ASTEROID_TRIGGER);
                                 output.accept(ModItems.KOGETSU_TRIGGER);
                                 output.accept(ModBlocks.RECALL_BED);
+                                output.accept(ModBlocks.MOTHER_TRIGGER);
                             }).build());
 
     public static void register(IEventBus eventBus) {

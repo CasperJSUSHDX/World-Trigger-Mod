@@ -6,6 +6,7 @@
 
   "block.wtmod.assembly_bench": "Assembly bench",
   "block.wtmod.recall_bed": "Recall bed",
+  "block.wtmod.mother_trigger": "Mother Trigger",
 
   "creativetab.wtmod.wt_items": "World Trigger",
 
@@ -13,6 +14,7 @@
   "message.wtmod.status_on": "%1$s on",
   "message.wtmod.status_off": "%1$s off",
   "message.wtmod.bind_recall_bed": "Binding to a recall bed at %1$s, %2$s, %3$s.",
+  "message.wtmod.out_of_mother_trigger_range": "Too far from a Mother Trigger to operate this.",
   "message.wtmod.unbind_recall_pos": "Unbind connection with your recall bed.",
   "message.wtmod.trion_not_enough": "Not enough trion to transform.",
   "tooltip.wtmod.mode": "Mode: %s",
@@ -22,6 +24,8 @@
   "key.category.wtmod.wtmod_keymap": "World Trigger",
   "key.wtmod.trigger_item": "Trigger ability",
   "key.wtmod.open_trigger_menu": "Open trigger menu",
+
+  "gui.wtmod.mother_trigger_range": "Network range: %s blocks",
 
   "gui.wtmod.main_triggers": "Main triggers",
   "gui.wtmod.sub_triggers": "Sub triggers",

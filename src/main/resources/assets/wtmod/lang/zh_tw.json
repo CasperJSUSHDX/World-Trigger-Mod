@@ -6,6 +6,7 @@
 
   "block.wtmod.assembly_bench": "裝配台",
   "block.wtmod.recall_bed": "撤離床",
+  "block.wtmod.mother_trigger": "母觸發",
 
   "creativetab.wtmod.wt_items": "境界觸發者",
 
@@ -13,6 +14,7 @@
   "message.wtmod.status_on": "啟動 %1$s",
   "message.wtmod.status_off": "關閉 %1$s",
   "message.wtmod.bind_recall_bed": "已綁並撤離床(%1$s, %2$s, %3$s).",
+  "message.wtmod.out_of_mother_trigger_range": "距離母觸發太遠，無法使用.",
   "message.wtmod.unbind_recall_pos": "取消與撤離床的連接.",
   "message.wtmod.trion_not_enough": "Trion 量不足以啟動",
   "tooltip.wtmod.mode": "模式: %s",
@@ -22,6 +24,8 @@
   "key.category.wtmod.wtmod_keymap": "境界觸發者 (World Trigger)",
   "key.wtmod.trigger_item": "啟動能力",
   "key.wtmod.open_trigger_menu": "開啟面板",
+
+  "gui.wtmod.mother_trigger_range": "連線範圍: %s 格",
 
   "gui.wtmod.main_triggers": "主觸發器",
   "gui.wtmod.sub_triggers": "副觸發器",

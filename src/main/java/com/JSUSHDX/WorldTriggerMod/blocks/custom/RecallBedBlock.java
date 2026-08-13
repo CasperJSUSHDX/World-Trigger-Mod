@@ -1,6 +1,7 @@
 package com.JSUSHDX.WorldTriggerMod.blocks.custom;
 
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
+import com.JSUSHDX.WorldTriggerMod.data.custom.MotherTriggerNetwork;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -29,6 +30,11 @@ public class RecallBedBlock extends Block {
     @Override
     protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (itemStack.is(ModItems.TRIGGER) && !level.isClientSide()) {
+            if (!MotherTriggerNetwork.isNearMotherTrigger(level, pos)) {
+                player.sendSystemMessage(Component.translatable("message.wtmod.out_of_mother_trigger_range"));
+                return InteractionResult.FAIL;
+            }
+
             Vec3 position = Vec3.atCenterOf(pos).add(0, 1, 0);
             itemStack.set(ModDataComponents.TRIGGER_RECALL_POS, position);
 

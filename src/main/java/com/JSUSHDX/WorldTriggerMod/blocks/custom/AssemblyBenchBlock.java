@@ -1,9 +1,11 @@
 package com.JSUSHDX.WorldTriggerMod.blocks.custom;
 
 import com.JSUSHDX.WorldTriggerMod.blocks.entity.AssemblyBenchBlockEntity;
+import com.JSUSHDX.WorldTriggerMod.data.custom.MotherTriggerNetwork;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -131,6 +133,10 @@ public class AssemblyBenchBlock extends BaseEntityBlock {
                                                 Player player, BlockHitResult hitResult) {
         if (!level.isClientSide()) {
             BlockPos masterPos = getMasterPos(pos, state);
+            if (!MotherTriggerNetwork.isNearMotherTrigger(level, masterPos)) {
+                player.sendSystemMessage(Component.translatable("message.wtmod.out_of_mother_trigger_range"));
+                return InteractionResult.FAIL;
+            }
             BlockEntity be = level.getBlockEntity(masterPos);
             if (be instanceof AssemblyBenchBlockEntity blockEntity) {
                 player.openMenu(blockEntity, masterPos);

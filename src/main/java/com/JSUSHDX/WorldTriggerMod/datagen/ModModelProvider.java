@@ -30,5 +30,6 @@ public class ModModelProvider extends ModelProvider {
         // in src/main/resources, which overrides these generated dummy files.
         blockModels.createTrivialCube(ModBlocks.ASSEMBLY_BENCH.get());
         blockModels.createTrivialCube(ModBlocks.RECALL_BED.get());
+        blockModels.createTrivialCube(ModBlocks.MOTHER_TRIGGER.get());
     }
 }

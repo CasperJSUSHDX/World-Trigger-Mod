@@ -18,7 +18,8 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
-                .add(ModBlocks.ASSEMBLY_BENCH.getKey());
+                .add(ModBlocks.ASSEMBLY_BENCH.getKey())
+                .add(ModBlocks.MOTHER_TRIGGER.getKey());
 
         tag(BlockTags.MINEABLE_WITH_AXE)
                 .add(ModBlocks.ASSEMBLY_BENCH.getKey());

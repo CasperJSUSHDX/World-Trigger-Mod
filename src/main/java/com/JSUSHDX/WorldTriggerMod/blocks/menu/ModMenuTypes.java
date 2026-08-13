@@ -16,6 +16,10 @@ public class ModMenuTypes {
             ASSEMBLY_BENCH_MENU = MENUS.register("assembly_bench_menu",
                     () -> IMenuTypeExtension.create(AssemblyBenchMenu::new));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<MotherTriggerMenu>>
+            MOTHER_TRIGGER_MENU = MENUS.register("mother_trigger_menu",
+                    () -> IMenuTypeExtension.create(MotherTriggerMenu::new));
+
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);
     }

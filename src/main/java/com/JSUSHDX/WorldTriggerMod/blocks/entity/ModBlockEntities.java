@@ -16,6 +16,10 @@ public class ModBlockEntities {
             ASSEMBLY_BENCH_BE = BLOCK_ENTITIES.register("assembly_bench_be",
                     () -> new BlockEntityType<>(AssemblyBenchBlockEntity::new, ModBlocks.ASSEMBLY_BENCH.get()));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MotherTriggerBlockEntity>>
+            MOTHER_TRIGGER_BE = BLOCK_ENTITIES.register("mother_trigger_be",
+                    () -> new BlockEntityType<>(MotherTriggerBlockEntity::new, ModBlocks.MOTHER_TRIGGER.get()));
+
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }

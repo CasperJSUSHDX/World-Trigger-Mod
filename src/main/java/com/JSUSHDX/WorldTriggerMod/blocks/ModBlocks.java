@@ -1,6 +1,7 @@
 package com.JSUSHDX.WorldTriggerMod.blocks;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.blocks.custom.MotherTriggerBlock;
 import com.JSUSHDX.WorldTriggerMod.blocks.custom.RecallBedBlock;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import com.JSUSHDX.WorldTriggerMod.blocks.custom.AssemblyBenchBlock;
@@ -24,6 +25,10 @@ public class ModBlocks {
     public static final DeferredBlock<RecallBedBlock> RECALL_BED = registerBlock("recall_bed",
             properties -> new RecallBedBlock(
                     properties.strength(4f).requiresCorrectToolForDrops().noOcclusion()));
+
+    public static final DeferredBlock<MotherTriggerBlock> MOTHER_TRIGGER = registerBlock("mother_trigger",
+            properties -> new MotherTriggerBlock(
+                    properties.strength(6f).requiresCorrectToolForDrops().noOcclusion().lightLevel(state -> 8)));
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, T> function) {
         DeferredBlock<T> toReturn = BLOCKS.registerBlock(name, function);

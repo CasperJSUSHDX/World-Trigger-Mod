@@ -20,6 +20,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
     protected void generate() {
         dropSelf(ModBlocks.ASSEMBLY_BENCH.get());
         dropSelf(ModBlocks.RECALL_BED.get());
+        dropSelf(ModBlocks.MOTHER_TRIGGER.get());
     }
 
     @Override

@@ -1,5 +1,6 @@
 {
   "values": [
-    "wtmod:assembly_bench"
+    "wtmod:assembly_bench",
+    "wtmod:mother_trigger"
   ]
 }
