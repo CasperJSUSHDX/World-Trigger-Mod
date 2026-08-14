@@ -22,6 +22,7 @@ public class ModBlockLootTableProvider extends BlockLootSubProvider {
         dropSelf(ModBlocks.RECALL_BED.get());
         dropSelf(ModBlocks.MOTHER_TRIGGER.get());
         dropSelf(ModBlocks.OPERATORS_TERMINAL.get());
+        dropSelf(ModBlocks.COMBAT_SIMULATE_CONSOLE.get());
     }
 
     @Override

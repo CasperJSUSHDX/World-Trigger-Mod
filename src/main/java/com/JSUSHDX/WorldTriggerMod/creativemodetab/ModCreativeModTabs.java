@@ -30,6 +30,7 @@ public class ModCreativeModTabs {
                                 output.accept(ModBlocks.RECALL_BED);
                                 output.accept(ModBlocks.MOTHER_TRIGGER);
                                 output.accept(ModBlocks.OPERATORS_TERMINAL);
+                                output.accept(ModBlocks.COMBAT_SIMULATE_CONSOLE);
                             }).build());
 
     public static void register(IEventBus eventBus) {

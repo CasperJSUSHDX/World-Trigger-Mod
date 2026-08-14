@@ -1,11 +1,8 @@
 package com.JSUSHDX.WorldTriggerMod.blocks;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
-import com.JSUSHDX.WorldTriggerMod.blocks.custom.MotherTriggerBlock;
-import com.JSUSHDX.WorldTriggerMod.blocks.custom.OperatorsTerminalBlock;
-import com.JSUSHDX.WorldTriggerMod.blocks.custom.RecallBedBlock;
+import com.JSUSHDX.WorldTriggerMod.blocks.custom.*;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
-import com.JSUSHDX.WorldTriggerMod.blocks.custom.AssemblyBenchBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -33,6 +30,10 @@ public class ModBlocks {
 
     public static final DeferredBlock<OperatorsTerminalBlock> OPERATORS_TERMINAL = registerBlock("operators_terminal",
             properties -> new OperatorsTerminalBlock(
+                    properties.strength(5f).requiresCorrectToolForDrops().noOcclusion()));
+
+    public static final DeferredBlock<CombatSimulateConsoleBlock> COMBAT_SIMULATE_CONSOLE = registerBlock("combat_simulate_console",
+            properties -> new CombatSimulateConsoleBlock(
                     properties.strength(5f).requiresCorrectToolForDrops().noOcclusion()));
 
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Function<BlockBehaviour.Properties, T> function) {

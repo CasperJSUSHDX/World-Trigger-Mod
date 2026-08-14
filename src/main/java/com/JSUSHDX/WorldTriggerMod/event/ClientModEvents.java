@@ -4,6 +4,7 @@ import com.JSUSHDX.WorldTriggerMod.blocks.menu.ModMenuTypes;
 import com.JSUSHDX.WorldTriggerMod.client.renderer.entity.ShieldEntityRenderer;
 import com.JSUSHDX.WorldTriggerMod.client.renderer.entity.TrionBulletRenderer;
 import com.JSUSHDX.WorldTriggerMod.client.screen.custom.AssemblyBenchScreen;
+import com.JSUSHDX.WorldTriggerMod.client.screen.custom.CombatSimulateConsoleScreen;
 import com.JSUSHDX.WorldTriggerMod.client.screen.custom.MotherTriggerScreen;
 import com.JSUSHDX.WorldTriggerMod.client.screen.custom.OperatorsTerminalScreen;
 import com.JSUSHDX.WorldTriggerMod.entity.ModEntities;
@@ -23,5 +24,6 @@ public class ClientModEvents {
         event.register(ModMenuTypes.ASSEMBLY_BENCH_MENU.get(), AssemblyBenchScreen::new);
         event.register(ModMenuTypes.MOTHER_TRIGGER_MENU.get(), MotherTriggerScreen::new);
         event.register(ModMenuTypes.OPERATORS_TERMINAL_MENU.get(), OperatorsTerminalScreen::new);
+        event.register(ModMenuTypes.COMBAT_SIMULATE_CONSOLE_MENU.get(), CombatSimulateConsoleScreen::new);
     }
 }

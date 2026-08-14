@@ -1,6 +1,7 @@
 package com.JSUSHDX.WorldTriggerMod.network;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.blocks.entity.CombatSimulateConsoleEntity;
 import com.JSUSHDX.WorldTriggerMod.blocks.entity.OperatorsTerminalBlockEntity;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
 import com.JSUSHDX.WorldTriggerMod.item.custom.AsteroidTriggerItem;
@@ -106,6 +107,59 @@ public class CommonPayload {
 
                 if (player.level().getBlockEntity(data.pos()) instanceof OperatorsTerminalBlockEntity blockEntity) {
                     blockEntity.removeEntry(data.ownerId());
+                }
+            });
+        }
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public record AddCombatPoolEntry(BlockPos pos) implements CustomPacketPayload {
+        // Payload ID
+        public static final CustomPacketPayload.Type<AddCombatPoolEntry> TYPE =
+                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "add_combat_pool_entry"));
+
+        public static final StreamCodec<ByteBuf, AddCombatPoolEntry> STREAM_CODEC = StreamCodec.composite(
+                BlockPos.STREAM_CODEC, AddCombatPoolEntry::pos,
+                AddCombatPoolEntry::new
+        );
+
+        public static void handler(final AddCombatPoolEntry data, final IPayloadContext context) {
+            context.enqueueWork(() -> {
+                var player = context.player();
+
+                if (player.level().getBlockEntity(data.pos()) instanceof CombatSimulateConsoleEntity blockEntity) {
+                    blockEntity.addRandomCombatEnvironment();
+                }
+            });
+        }
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public record RemoveCombatPoolEntry(BlockPos pos, int index) implements CustomPacketPayload {
+        // Payload ID
+        public static final CustomPacketPayload.Type<RemoveCombatPoolEntry> TYPE =
+                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "remove_combat_pool_entry"));
+
+        public static final StreamCodec<ByteBuf, RemoveCombatPoolEntry> STREAM_CODEC = StreamCodec.composite(
+                BlockPos.STREAM_CODEC, RemoveCombatPoolEntry::pos,
+                ByteBufCodecs.VAR_INT, RemoveCombatPoolEntry::index,
+                RemoveCombatPoolEntry::new
+        );
+
+        public static void handler(final RemoveCombatPoolEntry data, final IPayloadContext context) {
+            context.enqueueWork(() -> {
+                var player = context.player();
+
+                if (player.level().getBlockEntity(data.pos()) instanceof CombatSimulateConsoleEntity blockEntity) {
+                    blockEntity.removeCombatEnvironment(data.index());
                 }
             });
         }

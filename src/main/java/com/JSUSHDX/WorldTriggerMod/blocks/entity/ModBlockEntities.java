@@ -24,6 +24,10 @@ public class ModBlockEntities {
             OPERATORS_TERMINAL_BE = BLOCK_ENTITIES.register("operators_terminal_be",
                     () -> new BlockEntityType<>(OperatorsTerminalBlockEntity::new, ModBlocks.OPERATORS_TERMINAL.get()));
 
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CombatSimulateConsoleEntity>>
+            COMBAT_SIMULATE_CONSOLE_BE = BLOCK_ENTITIES.register("combat_simualte_console_be",
+            () -> new BlockEntityType<>(CombatSimulateConsoleEntity::new, ModBlocks.COMBAT_SIMULATE_CONSOLE.get()));
+
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }

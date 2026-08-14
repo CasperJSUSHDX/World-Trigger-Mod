@@ -51,6 +51,12 @@ public class OperatorsTerminalScreen extends BaseMachineScreen<OperatorsTerminal
     protected void extractLabels(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY) {
         super.extractLabels(guiGraphicsExtractor, mouseX, mouseY);
 
+        // extractLabels/renderLabels receives mouse coordinates in absolute screen space, but
+        // drawing here happens inside a pose already translated to (leftPos, topPos) - convert
+        // to the same local space before doing any hover/hit-testing.
+        int localMouseX = mouseX - this.leftPos;
+        int localMouseY = mouseY - this.topPos;
+
         List<TerminalEntry> entries = entries();
         if (entries.isEmpty()) {
             Component empty = Component.translatable("message.wtmod.terminal_no_entries");
@@ -69,7 +75,7 @@ public class OperatorsTerminalScreen extends BaseMachineScreen<OperatorsTerminal
             TerminalEntry entry = entries.get(index);
             int rowY = LIST_TOP + i * ROW_HEIGHT;
 
-            if (mouseX >= LIST_LEFT && mouseX < LIST_RIGHT && mouseY >= rowY && mouseY < rowY + ROW_HEIGHT) {
+            if (localMouseX >= LIST_LEFT && localMouseX < LIST_RIGHT && localMouseY >= rowY && localMouseY < rowY + ROW_HEIGHT) {
                 guiGraphicsExtractor.fill(LIST_LEFT, rowY, LIST_RIGHT, rowY + ROW_HEIGHT, 0x30FFFFFF);
             }
 

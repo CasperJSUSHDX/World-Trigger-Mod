@@ -8,6 +8,7 @@
   "block.wtmod.recall_bed": "Recall bed",
   "block.wtmod.mother_trigger": "Mother Trigger",
   "block.wtmod.operators_terminal": "Operator's Terminal",
+  "block.wtmod.combat_simulate_console": "Combat Simulate Console",
 
   "creativetab.wtmod.wt_items": "World Trigger",
 
@@ -20,6 +21,7 @@
   "message.wtmod.trion_not_enough": "Not enough trion to transform.",
   "message.wtmod.terminal_registered": "%1$s registered with the terminal.",
   "message.wtmod.terminal_no_entries": "No agents registered.",
+  "message.wtmod.combat_pool_empty": "No combat simulations yet.",
   "tooltip.wtmod.mode": "Mode: %s",
   "tooltip.wtmod.asteroid_mode0": "Shooting",
   "tooltip.wtmod.asteroid_mode4": "Placing",
@@ -34,5 +36,14 @@
   "gui.wtmod.sub_triggers": "Sub triggers",
   "gui.wtmod.category.weapon": "Weapons",
   "gui.wtmod.category.defense": "Defenses",
-  "gui.wtmod.category.optional": "Optionals"
+  "gui.wtmod.category.optional": "Optionals",
+  "gui.wtmod.combat_simulate_console": "Current simulations",
+  "gui.wtmod.combat_simulate_console.generate": "Generate Scenario",
+
+  "combat_environment.wtmod.description": "%1$s / %2$s",
+  "combat_environment.wtmod.time.morning": "Morning",
+  "combat_environment.wtmod.time.evening": "Evening",
+  "combat_environment.wtmod.weather.sunny": "Sunny",
+  "combat_environment.wtmod.weather.rainy": "Rainy",
+  "combat_environment.wtmod.weather.snowy": "Snowy"
 }

@@ -24,6 +24,10 @@ public class ModMenuTypes {
             OPERATORS_TERMINAL_MENU = MENUS.register("operators_terminal_menu",
                     () -> IMenuTypeExtension.create(OperatorsTerminalMenu::new));
 
+    public static final DeferredHolder<MenuType<?>, MenuType<CombatSimulateConsoleMenu>>
+            COMBAT_SIMULATE_CONSOLE_MENU = MENUS.register("combat_simulate_console_menu",
+            () -> IMenuTypeExtension.create(CombatSimulateConsoleMenu::new));
+
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);
     }

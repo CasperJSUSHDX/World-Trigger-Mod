@@ -20,7 +20,8 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
         tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(ModBlocks.ASSEMBLY_BENCH.getKey())
                 .add(ModBlocks.MOTHER_TRIGGER.getKey())
-                .add(ModBlocks.OPERATORS_TERMINAL.getKey());
+                .add(ModBlocks.OPERATORS_TERMINAL.getKey())
+                .add(ModBlocks.COMBAT_SIMULATE_CONSOLE.getKey());
 
         tag(BlockTags.MINEABLE_WITH_AXE)
                 .add(ModBlocks.ASSEMBLY_BENCH.getKey());

@@ -32,5 +32,6 @@ public class ModModelProvider extends ModelProvider {
         blockModels.createTrivialCube(ModBlocks.RECALL_BED.get());
         blockModels.createTrivialCube(ModBlocks.MOTHER_TRIGGER.get());
         blockModels.createTrivialCube(ModBlocks.OPERATORS_TERMINAL.get());
+        blockModels.createTrivialCube(ModBlocks.COMBAT_SIMULATE_CONSOLE.get());
     }
 }

@@ -16,5 +16,7 @@ public class ModNetwork {
         registrar.playToServer(CommonPayload.TriggerPlacedBullet.TYPE, CommonPayload.TriggerPlacedBullet.STREAM_CODEC, CommonPayload.TriggerPlacedBullet::handler);
         registrar.playToClient(CommonPayload.SetPlayerSlot.TYPE, CommonPayload.SetPlayerSlot.STREAM_CODEC, CommonPayload.SetPlayerSlot::handler);
         registrar.playToServer(CommonPayload.RemoveTerminalEntry.TYPE, CommonPayload.RemoveTerminalEntry.STREAM_CODEC, CommonPayload.RemoveTerminalEntry::handler);
+        registrar.playToServer(CommonPayload.AddCombatPoolEntry.TYPE, CommonPayload.AddCombatPoolEntry.STREAM_CODEC, CommonPayload.AddCombatPoolEntry::handler);
+        registrar.playToServer(CommonPayload.RemoveCombatPoolEntry.TYPE, CommonPayload.RemoveCombatPoolEntry.STREAM_CODEC, CommonPayload.RemoveCombatPoolEntry::handler);
     }
 }

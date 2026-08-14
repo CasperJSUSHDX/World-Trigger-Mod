@@ -8,6 +8,7 @@
   "block.wtmod.recall_bed": "撤離床",
   "block.wtmod.mother_trigger": "母觸發",
   "block.wtmod.operators_terminal": "作業員終端",
+  "block.wtmod.combat_simulate_console": "戰鬥模擬終端",
 
   "creativetab.wtmod.wt_items": "境界觸發者",
 
@@ -20,6 +21,7 @@
   "message.wtmod.trion_not_enough": "Trion 量不足以啟動",
   "message.wtmod.terminal_registered": "%1$s 已於終端機註冊.",
   "message.wtmod.terminal_no_entries": "尚無已註冊的隊員.",
+  "message.wtmod.combat_pool_empty": "尚無戰鬥模擬紀錄.",
   "tooltip.wtmod.mode": "模式: %s",
   "tooltip.wtmod.asteroid_mode0": "射擊",
   "tooltip.wtmod.asteroid_mode4": "放置",
@@ -34,5 +36,14 @@
   "gui.wtmod.sub_triggers": "副觸發器",
   "gui.wtmod.category.weapon": "武器類",
   "gui.wtmod.category.defense": "防禦類",
-  "gui.wtmod.category.optional": "選配"
+  "gui.wtmod.category.optional": "選配",
+  "gui.wtmod.combat_simulate_console": "進行中戰鬥",
+  "gui.wtmod.combat_simulate_console.generate": "生成戰鬥環境",
+
+  "combat_environment.wtmod.description": "%1$s / %2$s",
+  "combat_environment.wtmod.time.morning": "早上",
+  "combat_environment.wtmod.time.evening": "晚上",
+  "combat_environment.wtmod.weather.sunny": "晴天",
+  "combat_environment.wtmod.weather.rainy": "雨天",
+  "combat_environment.wtmod.weather.snowy": "下雪"
 }
