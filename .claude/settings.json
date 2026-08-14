@@ -1,0 +1,51 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__ide__getDiagnostics",
+      "mcp__blockbench__get_project_info",
+      "mcp__blockbench__create_project",
+      "mcp__blockbench__save_checkpoint",
+      "mcp__blockbench__add_group",
+      "mcp__blockbench__place_cube",
+      "mcp__blockbench__draw_shape_tool",
+      "mcp__blockbench__capture_screenshot",
+      "mcp__blockbench__list_export_formats",
+      "mcp__blockbench__export_model",
+      "mcp__blockbench__get_texture",
+      "mcp__blockbench__activate_texture",
+
+      "PowerShell(Get-ChildItem *)",
+
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(awk *)",
+      "Bash(xxd *)",
+      "Bash(where *)",
+      "Bash(echo *)",
+      "Bash(wait)",
+      "Bash(kill %1)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/neoforge-workflow-hook.py"
+          }
+        ]
+      },
+      {
+        "matcher": "PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/neoforge-workflow-hook.py"
+          }
+        ]
+      }
+    ]
+  }
+}
