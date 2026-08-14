@@ -3,7 +3,8 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "wtmod:block/mother_trigger",
-		"1": "wtmod:block/mother_trigger_lens"
+		"1": "wtmod:block/mother_trigger_lens",
+		"particle": "wtmod:block/mother_trigger"
 	},
 	"elements": [
 		{
