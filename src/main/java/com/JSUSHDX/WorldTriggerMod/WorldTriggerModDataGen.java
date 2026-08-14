@@ -29,4 +29,9 @@ public class WorldTriggerModDataGen {
                 lookupProvider));
         generator.addProvider(true, new ModRecipeProvider.Runner(packOutput, lookupProvider));
     }
+
+    @SubscribeEvent
+    public static void gatherServerData(GatherDataEvent.Server event) {
+        event.createDatapackRegistryObjects(ModDimensionProvider.BUILDER);
+    }
 }
