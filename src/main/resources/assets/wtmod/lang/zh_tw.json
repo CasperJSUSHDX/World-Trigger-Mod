@@ -20,6 +20,7 @@
   "message.wtmod.unbind_recall_pos": "取消與撤離床的連接.",
   "message.wtmod.trion_not_enough": "Trion 量不足以啟動",
   "message.wtmod.terminal_registered": "%1$s 已於終端機註冊.",
+  "message.wtmod.terminal_unregistered": "%1$s 已從終端機取消註冊.",
   "message.wtmod.terminal_no_entries": "尚無已註冊的隊員.",
   "message.wtmod.combat_pool_empty": "尚無戰鬥模擬紀錄.",
   "tooltip.wtmod.mode": "模式: %s",

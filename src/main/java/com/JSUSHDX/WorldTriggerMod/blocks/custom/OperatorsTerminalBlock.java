@@ -43,18 +43,9 @@ public class OperatorsTerminalBlock extends BaseEntityBlock {
 
     @Override
     protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (itemStack.is(ModItems.TRIGGER) && !level.isClientSide()) {
-            if (!MotherTriggerNetwork.isNearMotherTrigger(level, pos)) {
-                player.sendSystemMessage(Component.translatable("message.wtmod.out_of_mother_trigger_range"));
-                return InteractionResult.FAIL;
-            }
-
-            if (level.getBlockEntity(pos) instanceof OperatorsTerminalBlockEntity blockEntity) {
-                blockEntity.registerEntry(player);
-                player.sendSystemMessage(Component.translatable("message.wtmod.terminal_registered", player.getName()));
-            }
-
-            return InteractionResult.SUCCESS;
+        if (itemStack.is(ModItems.TRIGGER)) {
+            // Bind/unbind is handled by TriggerItem#useOn.
+            return InteractionResult.PASS;
         }
 
         return super.useItemOn(itemStack, state, level, pos, player, hand, hitResult);

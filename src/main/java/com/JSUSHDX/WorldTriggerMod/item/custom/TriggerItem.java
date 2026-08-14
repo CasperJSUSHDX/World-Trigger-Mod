@@ -1,8 +1,12 @@
 package com.JSUSHDX.WorldTriggerMod.item.custom;
 
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
+import com.JSUSHDX.WorldTriggerMod.blocks.custom.OperatorsTerminalBlock;
+import com.JSUSHDX.WorldTriggerMod.blocks.custom.RecallBedBlock;
+import com.JSUSHDX.WorldTriggerMod.blocks.entity.OperatorsTerminalBlockEntity;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataAttachment;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
+import com.JSUSHDX.WorldTriggerMod.data.custom.MotherTriggerNetwork;
 import com.JSUSHDX.WorldTriggerMod.data.custom.TrionData;
 import com.JSUSHDX.WorldTriggerMod.data.records.HealthData;
 import com.JSUSHDX.WorldTriggerMod.data.records.InventoryData;
@@ -10,6 +14,7 @@ import com.JSUSHDX.WorldTriggerMod.data.records.TriggerConfigureData;
 import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import com.JSUSHDX.WorldTriggerMod.network.CommonPayload;
 import com.JSUSHDX.WorldTriggerMod.util.TriggerStateUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
@@ -26,7 +31,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -171,15 +178,79 @@ public class TriggerItem extends Item {
     }
 
     @Override
-    public InteractionResult use(Level level, Player player, InteractionHand hand) {
-        ItemStack itemStack = player.getItemInHand(hand);
+    public InteractionResult useOn(UseOnContext context) {
+        Player player = context.getPlayer();
+        if (player == null) {
+            return super.useOn(context);
+        }
 
-        // Unbind recall pos
-        if (player.isShiftKeyDown() && !level.isClientSide()) {
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        Block block = level.getBlockState(pos).getBlock();
+
+        if (block instanceof RecallBedBlock) {
+            return bindOrUnbindRecallBed(level, pos, player, context.getItemInHand());
+        }
+
+        if (block instanceof OperatorsTerminalBlock) {
+            return bindOrUnbindOperatorsTerminal(level, pos, player);
+        }
+
+        return super.useOn(context);
+    }
+
+    private static InteractionResult bindOrUnbindRecallBed(Level level, BlockPos pos, Player player, ItemStack itemStack) {
+        if (level.isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
+
+        if (!MotherTriggerNetwork.isNearMotherTrigger(level, pos)) {
+            player.sendSystemMessage(Component.translatable("message.wtmod.out_of_mother_trigger_range"));
+            return InteractionResult.FAIL;
+        }
+
+        if (player.isShiftKeyDown()) {
             itemStack.remove(ModDataComponents.TRIGGER_RECALL_POS);
             player.sendSystemMessage(Component.translatable("message.wtmod.unbind_recall_pos"));
             return InteractionResult.SUCCESS;
         }
+
+        Vec3 position = Vec3.atCenterOf(pos).add(0, 1, 0);
+        itemStack.set(ModDataComponents.TRIGGER_RECALL_POS, position);
+
+        Component msg = Component.translatable("message.wtmod.bind_recall_bed", position.x, position.y, position.z);
+        player.sendSystemMessage(msg);
+        return InteractionResult.SUCCESS;
+    }
+
+    private static InteractionResult bindOrUnbindOperatorsTerminal(Level level, BlockPos pos, Player player) {
+        if (level.isClientSide()) {
+            return InteractionResult.SUCCESS;
+        }
+
+        if (!MotherTriggerNetwork.isNearMotherTrigger(level, pos)) {
+            player.sendSystemMessage(Component.translatable("message.wtmod.out_of_mother_trigger_range"));
+            return InteractionResult.FAIL;
+        }
+
+        if (!(level.getBlockEntity(pos) instanceof OperatorsTerminalBlockEntity blockEntity)) {
+            return InteractionResult.FAIL;
+        }
+
+        if (player.isShiftKeyDown()) {
+            blockEntity.removeEntry(player.getUUID());
+            player.sendSystemMessage(Component.translatable("message.wtmod.terminal_unregistered", player.getName()));
+            return InteractionResult.SUCCESS;
+        }
+
+        blockEntity.registerEntry(player);
+        player.sendSystemMessage(Component.translatable("message.wtmod.terminal_registered", player.getName()));
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
 
         if (!level.isClientSide()) {
             boolean isOn = itemStack.getOrDefault(ModDataComponents.IS_ON, false);

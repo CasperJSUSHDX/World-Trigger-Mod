@@ -20,6 +20,7 @@
   "message.wtmod.unbind_recall_pos": "Unbind connection with your recall bed.",
   "message.wtmod.trion_not_enough": "Not enough trion to transform.",
   "message.wtmod.terminal_registered": "%1$s registered with the terminal.",
+  "message.wtmod.terminal_unregistered": "%1$s unregistered from the terminal.",
   "message.wtmod.terminal_no_entries": "No agents registered.",
   "message.wtmod.combat_pool_empty": "No combat simulations yet.",
   "tooltip.wtmod.mode": "Mode: %s",
