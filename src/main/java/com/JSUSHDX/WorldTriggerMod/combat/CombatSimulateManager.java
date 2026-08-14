@@ -78,10 +78,10 @@ public class CombatSimulateManager {
         boolean night = environment.time() == CombatEnvironment.TimeOfDay.EVENING;
         boolean precip = environment.weather() != CombatEnvironment.Weather.SUNNY;
 
-        if (night && precip) return CombatSimulateDimensions.NightPrecip.COMBAT_SIMULATE_LEVEL;
-        if (night) return CombatSimulateDimensions.NightClear.COMBAT_SIMULATE_LEVEL;
-        if (precip) return CombatSimulateDimensions.DayPrecip.COMBAT_SIMULATE_LEVEL;
-        return CombatSimulateDimensions.DayClear.COMBAT_SIMULATE_LEVEL;
+        if (night && precip) return CombatSimulateDimensions.NIGHT_PRECIP.level();
+        if (night) return CombatSimulateDimensions.NIGHT_CLEAR.level();
+        if (precip) return CombatSimulateDimensions.DAY_PRECIP.level();
+        return CombatSimulateDimensions.DAY_CLEAR.level();
     }
 
     /**

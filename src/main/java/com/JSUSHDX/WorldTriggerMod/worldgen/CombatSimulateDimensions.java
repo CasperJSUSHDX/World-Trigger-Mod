@@ -25,325 +25,171 @@ import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.flat.FlatLayerInfo;
 import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Registers the four combat_simulate dimensions (day/night x clear/precip).
+ * <p>
+ * Each variant is described by an {@link EnvironmentVariant} entry in {@link #VARIANTS} - adding
+ * a new time/weather combination only means adding a new entry there. The
+ * registerBiome/registerDimensionType/registerLevelStem logic below is shared and data-driven,
+ * not duplicated per variant (previously each of the four variants had its own copy-pasted
+ * registration methods).
+ */
 public class CombatSimulateDimensions {
-    public record DayClear() {
-        public static final ResourceKey<Level> COMBAT_SIMULATE_LEVEL = ResourceKey.create(
-                Registries.DIMENSION, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_day_clear"));
 
-        public static final ResourceKey<LevelStem> COMBAT_SIMULATE_STEM = ResourceKey.create(
-                Registries.LEVEL_STEM, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_day_clear"));
-
-        public static final ResourceKey<DimensionType> COMBAT_SIMULATE_TYPE = ResourceKey.create(
-                Registries.DIMENSION_TYPE, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_day_clear"));
-
-        public static final ResourceKey<Biome> COMBAT_SIMULATE_BIOME = ResourceKey.create(
-                Registries.BIOME, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_day_clear"));
-
-        public static void registerBiome(BootstrapContext<Biome> context) {
-            context.register(
-                    DayClear.COMBAT_SIMULATE_BIOME,
-                    new Biome.BiomeBuilder()
-                            .hasPrecipitation(false)
-                            .temperature(0.5F)
-                            .downfall(0.5F)
-                            .specialEffects(new BiomeSpecialEffects.Builder().waterColor(4159204).build())
-                            .mobSpawnSettings(MobSpawnSettings.EMPTY)
-                            .generationSettings(BiomeGenerationSettings.EMPTY)
-                            .setAttribute(EnvironmentAttributes.FOG_COLOR, -4138753)
-                            .setAttribute(EnvironmentAttributes.SKY_COLOR, 0xFF87CEFA)
-                            .setAttribute(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, -16119286)
-                            .build()
-            );
-        }
-
-        public static void registerDimensionType(BootstrapContext<DimensionType> context) {
-            context.register(
-                    DayClear.COMBAT_SIMULATE_TYPE,
-                    new DimensionType(
-                            true,
-                            true,
-                            false,
-                            false,
-                            1.0,
-                            -64,
-                            384,
-                            384,
-                            HolderSet.empty(),
-                            0.0F,
-                            new DimensionType.MonsterSettings(UniformInt.of(0, 7), 0),
-                            DimensionType.Skybox.OVERWORLD,
-                            CardinalLighting.Type.DEFAULT,
-                            EnvironmentAttributeMap.builder()
-                                    .set(EnvironmentAttributes.FOG_COLOR, -4138753)
-                                    .set(EnvironmentAttributes.SKY_COLOR, 0xFF87CEFA)
-                                    .set(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, -16119286)
-                                    .build(),
-                            HolderSet.empty(),
-                            Optional.empty()
-                    )
-            );
-        }
-
-        public static void registerLevelStem(BootstrapContext<LevelStem> context) {
-            HolderGetter<DimensionType> dimensionTypes = context.lookup(Registries.DIMENSION_TYPE);
-            HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
-
-            FlatLevelGeneratorSettings settings = new FlatLevelGeneratorSettings(
-                    Optional.empty(),
-                    biomes.getOrThrow(DayClear.COMBAT_SIMULATE_BIOME),
-                    List.of()
-            );
-            settings.getLayersInfo().add(new FlatLayerInfo(1, Blocks.BARRIER));
-            settings.updateLayers();
-
-            context.register(
-                    DayClear.COMBAT_SIMULATE_STEM,
-                    new LevelStem(dimensionTypes.getOrThrow(DayClear.COMBAT_SIMULATE_TYPE), new FlatLevelSource(settings))
-            );
-        }
+    /**
+     * All the per-variant data that used to be hand-duplicated across DayClear/DayPrecip/
+     * NightClear/NightPrecip. The four angle/particle fields are nullable because "day" variants
+     * don't override sun/moon/star attributes and "clear" variants have no ambient particles.
+     */
+    public record EnvironmentVariant(
+            String id,
+            ResourceKey<Level> level,
+            ResourceKey<LevelStem> stem,
+            ResourceKey<DimensionType> type,
+            ResourceKey<Biome> biome,
+            boolean hasPrecipitation,
+            int fogColor,
+            int skyColor,
+            int ambientLightColor,
+            @Nullable List<AmbientParticle> ambientParticles,
+            @Nullable Float sunAngle,
+            @Nullable Float moonAngle,
+            @Nullable Float starAngle,
+            @Nullable Float starBrightness
+    ) {
     }
 
-    public record DayPrecip() {
-        public static final ResourceKey<Level> COMBAT_SIMULATE_LEVEL = ResourceKey.create(
-                Registries.DIMENSION, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_day_precip"));
-
-        public static final ResourceKey<LevelStem> COMBAT_SIMULATE_STEM = ResourceKey.create(
-                Registries.LEVEL_STEM, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_day_precip"));
-
-        public static final ResourceKey<DimensionType> COMBAT_SIMULATE_TYPE = ResourceKey.create(
-                Registries.DIMENSION_TYPE, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_day_precip"));
-
-        public static final ResourceKey<Biome> COMBAT_SIMULATE_BIOME = ResourceKey.create(
-                Registries.BIOME, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_day_precip"));
-
-        public static void registerBiome(BootstrapContext<Biome> context) {
-            context.register(
-                    DayPrecip.COMBAT_SIMULATE_BIOME,
-                    new Biome.BiomeBuilder()
-                            .hasPrecipitation(true)
-                            .temperature(0.5F)
-                            .downfall(0.5F)
-                            .specialEffects(new BiomeSpecialEffects.Builder().waterColor(4159204).build())
-                            .mobSpawnSettings(MobSpawnSettings.EMPTY)
-                            .generationSettings(BiomeGenerationSettings.EMPTY)
-                            .setAttribute(EnvironmentAttributes.FOG_COLOR, 0xFF9AA6B2)
-                            .setAttribute(EnvironmentAttributes.SKY_COLOR, 0xFF7C8A99)
-                            .setAttribute(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, 0xFF5C6570)
-                            .build()
-            );
-        }
-
-        public static void registerDimensionType(BootstrapContext<DimensionType> context) {
-            context.register(
-                    DayPrecip.COMBAT_SIMULATE_TYPE,
-                    new DimensionType(
-                            true,
-                            true,
-                            false,
-                            false,
-                            1.0,
-                            -64,
-                            384,
-                            384,
-                            HolderSet.empty(),
-                            0.0F,
-                            new DimensionType.MonsterSettings(UniformInt.of(0, 7), 0),
-                            DimensionType.Skybox.OVERWORLD,
-                            CardinalLighting.Type.DEFAULT,
-                            EnvironmentAttributeMap.builder()
-                                    .set(EnvironmentAttributes.FOG_COLOR, 0xFF9AA6B2)
-                                    .set(EnvironmentAttributes.SKY_COLOR, 0xFF7C8A99)
-                                    .set(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, 0xFF5C6570)
-                                    .set(EnvironmentAttributes.AMBIENT_PARTICLES, AmbientParticle.of(ParticleTypes.RAIN, 0.1F))
-                                    .build(),
-                            HolderSet.empty(),
-                            Optional.empty()
-                    )
-            );
-        }
-
-        public static void registerLevelStem(BootstrapContext<LevelStem> context) {
-            HolderGetter<DimensionType> dimensionTypes = context.lookup(Registries.DIMENSION_TYPE);
-            HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
-
-            FlatLevelGeneratorSettings settings = new FlatLevelGeneratorSettings(
-                    Optional.empty(),
-                    biomes.getOrThrow(DayPrecip.COMBAT_SIMULATE_BIOME),
-                    List.of()
-            );
-            settings.getLayersInfo().add(new FlatLayerInfo(1, Blocks.BARRIER));
-            settings.updateLayers();
-
-            context.register(
-                    DayPrecip.COMBAT_SIMULATE_STEM,
-                    new LevelStem(dimensionTypes.getOrThrow(DayPrecip.COMBAT_SIMULATE_TYPE), new FlatLevelSource(settings))
-            );
-        }
+    private static EnvironmentVariant variant(
+            String id, boolean hasPrecipitation, int fogColor, int skyColor, int ambientLightColor,
+            @Nullable List<AmbientParticle> ambientParticles,
+            @Nullable Float sunAngle, @Nullable Float moonAngle, @Nullable Float starAngle, @Nullable Float starBrightness
+    ) {
+        return new EnvironmentVariant(
+                id,
+                ResourceKey.create(Registries.DIMENSION, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, id)),
+                ResourceKey.create(Registries.LEVEL_STEM, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, id)),
+                ResourceKey.create(Registries.DIMENSION_TYPE, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, id)),
+                ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, id)),
+                hasPrecipitation, fogColor, skyColor, ambientLightColor, ambientParticles,
+                sunAngle, moonAngle, starAngle, starBrightness
+        );
     }
 
-    public record NightClear() {
-        public static final ResourceKey<Level> COMBAT_SIMULATE_LEVEL = ResourceKey.create(
-                Registries.DIMENSION, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_night_clear"));
+    public static final EnvironmentVariant DAY_CLEAR = variant(
+            "combat_simulate_day_clear", false,
+            -4138753, 0xFF87CEFA, -16119286,
+            null,
+            null, null, null, null
+    );
 
-        public static final ResourceKey<LevelStem> COMBAT_SIMULATE_STEM = ResourceKey.create(
-                Registries.LEVEL_STEM, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_night_clear"));
+    public static final EnvironmentVariant DAY_PRECIP = variant(
+            "combat_simulate_day_precip", true,
+            0xFF9AA6B2, 0xFF7C8A99, 0xFF5C6570,
+            AmbientParticle.of(ParticleTypes.RAIN, 0.1F),
+            null, null, null, null
+    );
 
-        public static final ResourceKey<DimensionType> COMBAT_SIMULATE_TYPE = ResourceKey.create(
-                Registries.DIMENSION_TYPE, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_night_clear"));
+    public static final EnvironmentVariant NIGHT_CLEAR = variant(
+            "combat_simulate_night_clear", false,
+            0xFF0C0E1A, 0xFF0B1030, 0xFF14141F,
+            null,
+            180.0F, 0.0F, 180.0F, 0.5F
+    );
 
-        public static final ResourceKey<Biome> COMBAT_SIMULATE_BIOME = ResourceKey.create(
-                Registries.BIOME, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_night_clear"));
+    public static final EnvironmentVariant NIGHT_PRECIP = variant(
+            "combat_simulate_night_precip", true,
+            0xFF14161C, 0xFF0E1014, 0xFF0C0C10,
+            AmbientParticle.of(ParticleTypes.RAIN, 0.1F),
+            180.0F, 0.0F, 180.0F, 0.5F
+    );
 
-        public static void registerBiome(BootstrapContext<Biome> context) {
-            context.register(
-                    NightClear.COMBAT_SIMULATE_BIOME,
-                    new Biome.BiomeBuilder()
-                            .hasPrecipitation(false)
-                            .temperature(0.5F)
-                            .downfall(0.5F)
-                            .specialEffects(new BiomeSpecialEffects.Builder().waterColor(4159204).build())
-                            .mobSpawnSettings(MobSpawnSettings.EMPTY)
-                            .generationSettings(BiomeGenerationSettings.EMPTY)
-                            .setAttribute(EnvironmentAttributes.FOG_COLOR, 0xFF0C0E1A)
-                            .setAttribute(EnvironmentAttributes.SKY_COLOR, 0xFF0B1030)
-                            .setAttribute(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, 0xFF14141F)
-                            .build()
-            );
-        }
+    /** All registered combat_simulate environment variants, in registration order. */
+    public static final List<EnvironmentVariant> VARIANTS = List.of(DAY_CLEAR, DAY_PRECIP, NIGHT_CLEAR, NIGHT_PRECIP);
 
-        public static void registerDimensionType(BootstrapContext<DimensionType> context) {
-            context.register(
-                    NightClear.COMBAT_SIMULATE_TYPE,
-                    new DimensionType(
-                            true,
-                            true,
-                            false,
-                            false,
-                            1.0,
-                            -64,
-                            384,
-                            384,
-                            HolderSet.empty(),
-                            0.0F,
-                            new DimensionType.MonsterSettings(UniformInt.of(0, 7), 0),
-                            DimensionType.Skybox.OVERWORLD,
-                            CardinalLighting.Type.DEFAULT,
-                            EnvironmentAttributeMap.builder()
-                                    .set(EnvironmentAttributes.FOG_COLOR, 0xFF0C0E1A)
-                                    .set(EnvironmentAttributes.SKY_COLOR, 0xFF0B1030)
-                                    .set(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, 0xFF14141F)
-                                    .set(EnvironmentAttributes.SUN_ANGLE, 180.0F)
-                                    .set(EnvironmentAttributes.MOON_ANGLE, 0.0F)
-                                    .set(EnvironmentAttributes.STAR_ANGLE, 180.0F)
-                                    .set(EnvironmentAttributes.STAR_BRIGHTNESS, 0.5F)
-                                    .build(),
-                            HolderSet.empty(),
-                            Optional.empty()
-                    )
-            );
-        }
-
-        public static void registerLevelStem(BootstrapContext<LevelStem> context) {
-            HolderGetter<DimensionType> dimensionTypes = context.lookup(Registries.DIMENSION_TYPE);
-            HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
-
-            FlatLevelGeneratorSettings settings = new FlatLevelGeneratorSettings(
-                    Optional.empty(),
-                    biomes.getOrThrow(NightClear.COMBAT_SIMULATE_BIOME),
-                    List.of()
-            );
-            settings.getLayersInfo().add(new FlatLayerInfo(1, Blocks.BARRIER));
-            settings.updateLayers();
-
-            context.register(
-                    NightClear.COMBAT_SIMULATE_STEM,
-                    new LevelStem(dimensionTypes.getOrThrow(NightClear.COMBAT_SIMULATE_TYPE), new FlatLevelSource(settings))
-            );
-        }
+    public static void registerBiomes(BootstrapContext<Biome> context) {
+        for (EnvironmentVariant v : VARIANTS) registerBiome(context, v);
     }
 
-    public record NightPrecip() {
-        public static final ResourceKey<Level> COMBAT_SIMULATE_LEVEL = ResourceKey.create(
-                Registries.DIMENSION, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_night_precip"));
+    public static void registerDimensionTypes(BootstrapContext<DimensionType> context) {
+        for (EnvironmentVariant v : VARIANTS) registerDimensionType(context, v);
+    }
 
-        public static final ResourceKey<LevelStem> COMBAT_SIMULATE_STEM = ResourceKey.create(
-                Registries.LEVEL_STEM, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_night_precip"));
+    public static void registerLevelStems(BootstrapContext<LevelStem> context) {
+        for (EnvironmentVariant v : VARIANTS) registerLevelStem(context, v);
+    }
 
-        public static final ResourceKey<DimensionType> COMBAT_SIMULATE_TYPE = ResourceKey.create(
-                Registries.DIMENSION_TYPE, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_night_precip"));
+    private static void registerBiome(BootstrapContext<Biome> context, EnvironmentVariant v) {
+        context.register(
+                v.biome(),
+                new Biome.BiomeBuilder()
+                        .hasPrecipitation(v.hasPrecipitation())
+                        .temperature(0.5F)
+                        .downfall(0.5F)
+                        .specialEffects(new BiomeSpecialEffects.Builder().waterColor(4159204).build())
+                        .mobSpawnSettings(MobSpawnSettings.EMPTY)
+                        .generationSettings(BiomeGenerationSettings.EMPTY)
+                        .setAttribute(EnvironmentAttributes.FOG_COLOR, v.fogColor())
+                        .setAttribute(EnvironmentAttributes.SKY_COLOR, v.skyColor())
+                        .setAttribute(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, v.ambientLightColor())
+                        .build()
+        );
+    }
 
-        public static final ResourceKey<Biome> COMBAT_SIMULATE_BIOME = ResourceKey.create(
-                Registries.BIOME, Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "combat_simulate_night_precip"));
+    private static void registerDimensionType(BootstrapContext<DimensionType> context, EnvironmentVariant v) {
+        var attributes = EnvironmentAttributeMap.builder()
+                .set(EnvironmentAttributes.FOG_COLOR, v.fogColor())
+                .set(EnvironmentAttributes.SKY_COLOR, v.skyColor())
+                .set(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, v.ambientLightColor());
 
-        public static void registerBiome(BootstrapContext<Biome> context) {
-            context.register(
-                    NightPrecip.COMBAT_SIMULATE_BIOME,
-                    new Biome.BiomeBuilder()
-                            .hasPrecipitation(true)
-                            .temperature(0.5F)
-                            .downfall(0.5F)
-                            .specialEffects(new BiomeSpecialEffects.Builder().waterColor(4159204).build())
-                            .mobSpawnSettings(MobSpawnSettings.EMPTY)
-                            .generationSettings(BiomeGenerationSettings.EMPTY)
-                            .setAttribute(EnvironmentAttributes.FOG_COLOR, 0xFF14161C)
-                            .setAttribute(EnvironmentAttributes.SKY_COLOR, 0xFF0E1014)
-                            .setAttribute(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, 0xFF0C0C10)
-                            .build()
-            );
-        }
+        if (v.ambientParticles() != null) attributes.set(EnvironmentAttributes.AMBIENT_PARTICLES, v.ambientParticles());
+        if (v.sunAngle() != null) attributes.set(EnvironmentAttributes.SUN_ANGLE, v.sunAngle());
+        if (v.moonAngle() != null) attributes.set(EnvironmentAttributes.MOON_ANGLE, v.moonAngle());
+        if (v.starAngle() != null) attributes.set(EnvironmentAttributes.STAR_ANGLE, v.starAngle());
+        if (v.starBrightness() != null) attributes.set(EnvironmentAttributes.STAR_BRIGHTNESS, v.starBrightness());
 
-        public static void registerDimensionType(BootstrapContext<DimensionType> context) {
-            context.register(
-                    NightPrecip.COMBAT_SIMULATE_TYPE,
-                    new DimensionType(
-                            true,
-                            true,
-                            false,
-                            false,
-                            1.0,
-                            -64,
-                            384,
-                            384,
-                            HolderSet.empty(),
-                            0.0F,
-                            new DimensionType.MonsterSettings(UniformInt.of(0, 7), 0),
-                            DimensionType.Skybox.OVERWORLD,
-                            CardinalLighting.Type.DEFAULT,
-                            EnvironmentAttributeMap.builder()
-                                    .set(EnvironmentAttributes.FOG_COLOR, 0xFF14161C)
-                                    .set(EnvironmentAttributes.SKY_COLOR, 0xFF0E1014)
-                                    .set(EnvironmentAttributes.AMBIENT_LIGHT_COLOR, 0xFF0C0C10)
-                                    .set(EnvironmentAttributes.AMBIENT_PARTICLES, AmbientParticle.of(ParticleTypes.RAIN, 0.1F))
-                                    .set(EnvironmentAttributes.SUN_ANGLE, 180.0F)
-                                    .set(EnvironmentAttributes.MOON_ANGLE, 0.0F)
-                                    .set(EnvironmentAttributes.STAR_ANGLE, 180.0F)
-                                    .set(EnvironmentAttributes.STAR_BRIGHTNESS, 0.5F)
-                                    .build(),
-                            HolderSet.empty(),
-                            Optional.empty()
-                    )
-            );
-        }
+        context.register(
+                v.type(),
+                new DimensionType(
+                        true,
+                        true,
+                        false,
+                        false,
+                        1.0,
+                        -64,
+                        384,
+                        384,
+                        HolderSet.empty(),
+                        0.0F,
+                        new DimensionType.MonsterSettings(UniformInt.of(0, 7), 0),
+                        DimensionType.Skybox.OVERWORLD,
+                        CardinalLighting.Type.DEFAULT,
+                        attributes.build(),
+                        HolderSet.empty(),
+                        Optional.empty()
+                )
+        );
+    }
 
-        public static void registerLevelStem(BootstrapContext<LevelStem> context) {
-            HolderGetter<DimensionType> dimensionTypes = context.lookup(Registries.DIMENSION_TYPE);
-            HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
+    private static void registerLevelStem(BootstrapContext<LevelStem> context, EnvironmentVariant v) {
+        HolderGetter<DimensionType> dimensionTypes = context.lookup(Registries.DIMENSION_TYPE);
+        HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
 
-            FlatLevelGeneratorSettings settings = new FlatLevelGeneratorSettings(
-                    Optional.empty(),
-                    biomes.getOrThrow(NightPrecip.COMBAT_SIMULATE_BIOME),
-                    List.of()
-            );
-            settings.getLayersInfo().add(new FlatLayerInfo(1, Blocks.BARRIER));
-            settings.updateLayers();
+        FlatLevelGeneratorSettings settings = new FlatLevelGeneratorSettings(
+                Optional.empty(),
+                biomes.getOrThrow(v.biome()),
+                List.of()
+        );
+        settings.getLayersInfo().add(new FlatLayerInfo(1, Blocks.BARRIER));
+        settings.updateLayers();
 
-            context.register(
-                    NightPrecip.COMBAT_SIMULATE_STEM,
-                    new LevelStem(dimensionTypes.getOrThrow(NightPrecip.COMBAT_SIMULATE_TYPE), new FlatLevelSource(settings))
-            );
-        }
+        context.register(
+                v.stem(),
+                new LevelStem(dimensionTypes.getOrThrow(v.type()), new FlatLevelSource(settings))
+        );
     }
 }

@@ -15,23 +15,14 @@ public class ModDimensionProvider {
             .add(Registries.LEVEL_STEM, ModDimensionProvider::bootstrapLevelStem);
 
     private static void bootstrapBiome(BootstrapContext<Biome> context) {
-        CombatSimulateDimensions.DayClear.registerBiome(context);
-        CombatSimulateDimensions.DayPrecip.registerBiome(context);
-        CombatSimulateDimensions.NightClear.registerBiome(context);
-        CombatSimulateDimensions.NightPrecip.registerBiome(context);
+        CombatSimulateDimensions.registerBiomes(context);
     }
 
     private static void bootstrapDimensionType(BootstrapContext<DimensionType> context) {
-        CombatSimulateDimensions.DayClear.registerDimensionType(context);
-        CombatSimulateDimensions.DayPrecip.registerDimensionType(context);
-        CombatSimulateDimensions.NightClear.registerDimensionType(context);
-        CombatSimulateDimensions.NightPrecip.registerDimensionType(context);
+        CombatSimulateDimensions.registerDimensionTypes(context);
     }
 
     private static void bootstrapLevelStem(BootstrapContext<LevelStem> context) {
-        CombatSimulateDimensions.DayClear.registerLevelStem(context);
-        CombatSimulateDimensions.DayPrecip.registerLevelStem(context);
-        CombatSimulateDimensions.NightClear.registerLevelStem(context);
-        CombatSimulateDimensions.NightPrecip.registerLevelStem(context);
+        CombatSimulateDimensions.registerLevelStems(context);
     }
 }
