@@ -7,13 +7,14 @@ import com.JSUSHDX.WorldTriggerMod.blocks.entity.OperatorsTerminalBlockEntity;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataAttachment;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
 import com.JSUSHDX.WorldTriggerMod.data.custom.MotherTriggerNetwork;
+import com.JSUSHDX.WorldTriggerMod.combat.CombatSimulateManager;
 import com.JSUSHDX.WorldTriggerMod.data.custom.TrionData;
 import com.JSUSHDX.WorldTriggerMod.data.records.HealthData;
 import com.JSUSHDX.WorldTriggerMod.data.records.InventoryData;
 import com.JSUSHDX.WorldTriggerMod.data.records.TriggerConfigureData;
-import com.JSUSHDX.WorldTriggerMod.item.ModItems;
 import com.JSUSHDX.WorldTriggerMod.network.CommonPayload;
 import com.JSUSHDX.WorldTriggerMod.util.TriggerStateUtils;
+import com.JSUSHDX.WorldTriggerMod.util.TrionUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -37,8 +38,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.function.Consumer;
 
 public class TriggerItem extends Item {
@@ -310,6 +309,14 @@ public class TriggerItem extends Item {
 
     public static void bailOut(ServerPlayer player, ItemStack itemStack) {
         resetPlayerStatus(player, itemStack);
+
+        // If this player is inside a running combat simulation, that has its own return-teleport
+        // (back to wherever they were before it started) which takes priority over the recall bed -
+        // the recall bed is for real away-mission use, not for leaving a training arena.
+        boolean trionDepleted = TrionUtils.getTrion(player) <= 0;
+        if (CombatSimulateManager.onPlayerBailout(player, trionDepleted)) {
+            return;
+        }
 
         // Teleport to recall bed
         Vec3 position = itemStack.get(ModDataComponents.TRIGGER_RECALL_POS);

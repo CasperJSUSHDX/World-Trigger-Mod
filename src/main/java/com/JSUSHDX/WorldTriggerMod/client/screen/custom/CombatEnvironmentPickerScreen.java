@@ -42,14 +42,31 @@ public class CombatEnvironmentPickerScreen extends Screen {
 
     private final Screen parent;
     private final BlockPos consolePos;
+    // -1 means "add a new entry" (the original flow); >= 0 means "editing the pool entry at this
+    // index" - opened via the pool row's gear button, pre-filled with that entry's current
+    // time/weather, and confirming overwrites the same slot instead of appending.
+    private final int editIndex;
 
     private CombatEnvironment.TimeOfDay selectedTime = CombatEnvironment.TimeOfDay.MORNING;
     private CombatEnvironment.Weather selectedWeather = CombatEnvironment.Weather.SUNNY;
 
+    /** Opens the picker to add a brand new pool entry. */
     public CombatEnvironmentPickerScreen(Screen parent, BlockPos consolePos) {
-        super(Component.translatable("gui.wtmod.combat_environment_picker.title"));
+        this(parent, consolePos, -1, null);
+    }
+
+    /** Opens the picker to edit the pool entry already at {@code editIndex}, pre-selecting {@code initial}. */
+    public CombatEnvironmentPickerScreen(Screen parent, BlockPos consolePos, int editIndex, CombatEnvironment initial) {
+        super(Component.translatable(editIndex >= 0
+                ? "gui.wtmod.combat_environment_picker.title_edit"
+                : "gui.wtmod.combat_environment_picker.title"));
         this.parent = parent;
         this.consolePos = consolePos;
+        this.editIndex = editIndex;
+        if (initial != null) {
+            this.selectedTime = initial.time();
+            this.selectedWeather = initial.weather();
+        }
     }
 
     @Override
@@ -174,7 +191,11 @@ public class CombatEnvironmentPickerScreen extends Screen {
             }
 
             if (isInside(mouseX, mouseY, confirmButtonBounds())) {
-                ClientPacketDistributor.sendToServer(new CommonPayload.AddCombatPoolEntry(consolePos, selectedTime, selectedWeather));
+                if (editIndex >= 0) {
+                    ClientPacketDistributor.sendToServer(new CommonPayload.UpdateCombatPoolEntry(consolePos, editIndex, selectedTime, selectedWeather));
+                } else {
+                    ClientPacketDistributor.sendToServer(new CommonPayload.AddCombatPoolEntry(consolePos, selectedTime, selectedWeather));
+                }
                 this.minecraft.setScreenAndShow(this.parent);
                 return true;
             }

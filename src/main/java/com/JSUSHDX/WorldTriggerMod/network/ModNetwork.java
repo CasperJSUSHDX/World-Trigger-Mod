@@ -18,5 +18,8 @@ public class ModNetwork {
         registrar.playToServer(CommonPayload.RemoveTerminalEntry.TYPE, CommonPayload.RemoveTerminalEntry.STREAM_CODEC, CommonPayload.RemoveTerminalEntry::handler);
         registrar.playToServer(CommonPayload.AddCombatPoolEntry.TYPE, CommonPayload.AddCombatPoolEntry.STREAM_CODEC, CommonPayload.AddCombatPoolEntry::handler);
         registrar.playToServer(CommonPayload.RemoveCombatPoolEntry.TYPE, CommonPayload.RemoveCombatPoolEntry.STREAM_CODEC, CommonPayload.RemoveCombatPoolEntry::handler);
+        registrar.playToServer(CommonPayload.UpdateCombatPoolEntry.TYPE, CommonPayload.UpdateCombatPoolEntry.STREAM_CODEC, CommonPayload.UpdateCombatPoolEntry::handler);
+        registrar.playToServer(CommonPayload.StartCombatSimulation.TYPE, CommonPayload.StartCombatSimulation.STREAM_CODEC, CommonPayload.StartCombatSimulation::handler);
+        registrar.playToServer(CommonPayload.RecallCombatSimulation.TYPE, CommonPayload.RecallCombatSimulation.STREAM_CODEC, CommonPayload.RecallCombatSimulation::handler);
     }
 }

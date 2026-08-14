@@ -2,6 +2,7 @@ package com.JSUSHDX.WorldTriggerMod.blocks.entity;
 
 import com.JSUSHDX.WorldTriggerMod.blocks.entity.base.BaseMachineBlockEntity;
 import com.JSUSHDX.WorldTriggerMod.blocks.menu.CombatSimulateConsoleMenu;
+import com.JSUSHDX.WorldTriggerMod.combat.CombatSimulationSummary;
 import com.JSUSHDX.WorldTriggerMod.data.records.CombatEnvironment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -32,6 +33,17 @@ public class CombatSimulateConsoleEntity extends BaseMachineBlockEntity implemen
      */
     private final List<CombatEnvironment> combatPool = new ArrayList<>();
 
+    /**
+     * Display-only snapshot of the simulations {@link com.JSUSHDX.WorldTriggerMod.combat.CombatSimulateManager}
+     * currently has running for this console. Pushed by the manager whenever a simulation
+     * starts/ends and refreshed roughly once a second for the countdown. Persisted alongside
+     * combat_pool for network sync convenience. Note: since CombatSimulateManager itself never
+     * survives a restart, a row loaded from disk after a restart can briefly be a stale ghost with
+     * a frozen countdown - harmless, and it self-corrects the next time this console starts or ends
+     * a simulation (no manager state ever depends on this list).
+     */
+    private final List<CombatSimulationSummary> activeSimulations = new ArrayList<>();
+
     public CombatSimulateConsoleEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.COMBAT_SIMULATE_CONSOLE_BE.get(), pos, state, INVENTORY_SIZE);
     }
@@ -57,8 +69,33 @@ public class CombatSimulateConsoleEntity extends BaseMachineBlockEntity implemen
         }
     }
 
+    /**
+     * Replaces the entry at the given index in place (used by the pool row's gear/edit button -
+     * reopens {@code CombatEnvironmentPickerScreen} pre-filled with the current time/weather and
+     * overwrites that same slot on confirm, rather than appending a new entry).
+     */
+    public void updateCombatEnvironment(int index, CombatEnvironment environment) {
+        if (index >= 0 && index < combatPool.size()) {
+            combatPool.set(index, environment);
+            setChanged();
+            syncToClients();
+        }
+    }
+
     public List<CombatEnvironment> getCombatPool() {
         return List.copyOf(combatPool);
+    }
+
+    /** Called by {@code CombatSimulateManager} to push an updated ongoing-simulations snapshot. */
+    public void setActiveSimulations(List<CombatSimulationSummary> summaries) {
+        activeSimulations.clear();
+        activeSimulations.addAll(summaries);
+        setChanged();
+        syncToClients();
+    }
+
+    public List<CombatSimulationSummary> getActiveSimulations() {
+        return List.copyOf(activeSimulations);
     }
 
     private void syncToClients() {
@@ -71,6 +108,7 @@ public class CombatSimulateConsoleEntity extends BaseMachineBlockEntity implemen
     protected void saveAdditional(ValueOutput output) {
         super.saveAdditional(output);
         output.store("combat_pool", CombatEnvironment.CODEC.listOf(), List.copyOf(combatPool));
+        output.store("active_simulations", CombatSimulationSummary.CODEC.listOf(), List.copyOf(activeSimulations));
     }
 
     @Override
@@ -78,6 +116,8 @@ public class CombatSimulateConsoleEntity extends BaseMachineBlockEntity implemen
         super.loadAdditional(input);
         combatPool.clear();
         input.read("combat_pool", CombatEnvironment.CODEC.listOf()).ifPresent(combatPool::addAll);
+        activeSimulations.clear();
+        input.read("active_simulations", CombatSimulationSummary.CODEC.listOf()).ifPresent(activeSimulations::addAll);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.JSUSHDX.WorldTriggerMod.network;
 import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
 import com.JSUSHDX.WorldTriggerMod.blocks.entity.CombatSimulateConsoleEntity;
 import com.JSUSHDX.WorldTriggerMod.blocks.entity.OperatorsTerminalBlockEntity;
+import com.JSUSHDX.WorldTriggerMod.combat.CombatSimulateManager;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
 import com.JSUSHDX.WorldTriggerMod.data.records.CombatEnvironment;
 import com.JSUSHDX.WorldTriggerMod.item.custom.AsteroidTriggerItem;
@@ -13,8 +14,10 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
+import java.util.List;
 import java.util.UUID;
 
 public class CommonPayload {
@@ -150,6 +153,39 @@ public class CommonPayload {
         }
     }
 
+    public record UpdateCombatPoolEntry(BlockPos pos, int index, CombatEnvironment.TimeOfDay time,
+                                         CombatEnvironment.Weather weather) implements CustomPacketPayload {
+        // Payload ID
+        public static final CustomPacketPayload.Type<UpdateCombatPoolEntry> TYPE =
+                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "update_combat_pool_entry"));
+
+        private static final CombatEnvironment.TimeOfDay[] TIMES = CombatEnvironment.TimeOfDay.values();
+        private static final CombatEnvironment.Weather[] WEATHERS = CombatEnvironment.Weather.values();
+
+        public static final StreamCodec<ByteBuf, UpdateCombatPoolEntry> STREAM_CODEC = StreamCodec.composite(
+                BlockPos.STREAM_CODEC, UpdateCombatPoolEntry::pos,
+                ByteBufCodecs.VAR_INT, UpdateCombatPoolEntry::index,
+                ByteBufCodecs.VAR_INT.map(i -> TIMES[i], CombatEnvironment.TimeOfDay::ordinal), UpdateCombatPoolEntry::time,
+                ByteBufCodecs.VAR_INT.map(i -> WEATHERS[i], CombatEnvironment.Weather::ordinal), UpdateCombatPoolEntry::weather,
+                UpdateCombatPoolEntry::new
+        );
+
+        public static void handler(final UpdateCombatPoolEntry data, final IPayloadContext context) {
+            context.enqueueWork(() -> {
+                var player = context.player();
+
+                if (player.level().getBlockEntity(data.pos()) instanceof CombatSimulateConsoleEntity blockEntity) {
+                    blockEntity.updateCombatEnvironment(data.index(), new CombatEnvironment(data.time(), data.weather()));
+                }
+            });
+        }
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     public record RemoveCombatPoolEntry(BlockPos pos, int index) implements CustomPacketPayload {
         // Payload ID
         public static final CustomPacketPayload.Type<RemoveCombatPoolEntry> TYPE =
@@ -169,6 +205,59 @@ public class CommonPayload {
                     blockEntity.removeCombatEnvironment(data.index());
                 }
             });
+        }
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public record StartCombatSimulation(BlockPos pos, int poolIndex) implements CustomPacketPayload {
+        // Payload ID
+        public static final CustomPacketPayload.Type<StartCombatSimulation> TYPE =
+                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "start_combat_simulation"));
+
+        public static final StreamCodec<ByteBuf, StartCombatSimulation> STREAM_CODEC = StreamCodec.composite(
+                BlockPos.STREAM_CODEC, StartCombatSimulation::pos,
+                ByteBufCodecs.VAR_INT, StartCombatSimulation::poolIndex,
+                StartCombatSimulation::new
+        );
+
+        public static void handler(final StartCombatSimulation data, final IPayloadContext context) {
+            context.enqueueWork(() -> {
+                if (!(context.player() instanceof ServerPlayer serverPlayer)) {
+                    return;
+                }
+
+                if (serverPlayer.level().getBlockEntity(data.pos()) instanceof CombatSimulateConsoleEntity blockEntity) {
+                    List<CombatEnvironment> pool = blockEntity.getCombatPool();
+                    if (data.poolIndex() >= 0 && data.poolIndex() < pool.size()) {
+                        CombatSimulateManager.start(serverPlayer, blockEntity, pool.get(data.poolIndex()), data.poolIndex());
+                    }
+                }
+            });
+        }
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public record RecallCombatSimulation(BlockPos pos, UUID simulationId) implements CustomPacketPayload {
+        // Payload ID
+        public static final CustomPacketPayload.Type<RecallCombatSimulation> TYPE =
+                new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "recall_combat_simulation"));
+
+        public static final StreamCodec<ByteBuf, RecallCombatSimulation> STREAM_CODEC = StreamCodec.composite(
+                BlockPos.STREAM_CODEC, RecallCombatSimulation::pos,
+                UUIDUtil.STREAM_CODEC, RecallCombatSimulation::simulationId,
+                RecallCombatSimulation::new
+        );
+
+        public static void handler(final RecallCombatSimulation data, final IPayloadContext context) {
+            context.enqueueWork(() -> CombatSimulateManager.forceRecall(data.simulationId()));
         }
 
         @Override

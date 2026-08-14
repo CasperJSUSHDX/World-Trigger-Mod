@@ -51,3 +51,4 @@ CLAUDE.local.md
 .claude/memory/
 .claude/logs/
 .claude/*.log
+/run-client2/
