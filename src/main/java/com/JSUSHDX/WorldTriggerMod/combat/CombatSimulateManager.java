@@ -162,7 +162,7 @@ public class CombatSimulateManager {
     }
 
     /**
-     * Called from {@code TriggerItem#bailOut} whenever a player turns their trigger off, whether
+     * Called from {@code TriggerModeUtils#bailOut} whenever a player turns their trigger off, whether
      * voluntarily (shift-click) or because their trion hit zero. If they're in an active
      * simulation, this handles the elimination/return-teleport instead of the trigger's own
      * recall-bed logic and returns true so the caller skips that.
