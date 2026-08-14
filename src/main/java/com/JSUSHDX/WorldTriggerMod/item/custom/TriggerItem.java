@@ -279,7 +279,11 @@ public class TriggerItem extends Item {
                 ProvideChosenTriggers(player, itemStack);
             } else {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    bailOut(serverPlayer, itemStack);
+                    if (player.isShiftKeyDown()) {
+                        bailOut(serverPlayer, itemStack);
+                    } else {
+                        resetPlayerStatus(serverPlayer,  itemStack);
+                    }
                 }
             }
         }
@@ -287,7 +291,7 @@ public class TriggerItem extends Item {
         return InteractionResult.SUCCESS;
     }
 
-    public static void bailOut(ServerPlayer player, ItemStack itemStack) {
+    private static void resetPlayerStatus(ServerPlayer player, ItemStack itemStack) {
         // Inventory operations
         recoverTriggerBeforeSlot(player, itemStack);
         restoreTriggerSavedInventoryToPlayer(player, itemStack);
@@ -302,6 +306,10 @@ public class TriggerItem extends Item {
         player.clearFreeze();
 
         TriggerStateUtils.toggleState(player);
+    }
+
+    public static void bailOut(ServerPlayer player, ItemStack itemStack) {
+        resetPlayerStatus(player, itemStack);
 
         // Teleport to recall bed
         Vec3 position = itemStack.get(ModDataComponents.TRIGGER_RECALL_POS);
