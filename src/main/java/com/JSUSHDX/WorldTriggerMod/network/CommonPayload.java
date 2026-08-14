@@ -4,6 +4,7 @@ import com.JSUSHDX.WorldTriggerMod.WorldTriggerMod;
 import com.JSUSHDX.WorldTriggerMod.blocks.entity.CombatSimulateConsoleEntity;
 import com.JSUSHDX.WorldTriggerMod.blocks.entity.OperatorsTerminalBlockEntity;
 import com.JSUSHDX.WorldTriggerMod.data.ModDataComponents;
+import com.JSUSHDX.WorldTriggerMod.data.records.CombatEnvironment;
 import com.JSUSHDX.WorldTriggerMod.item.custom.AsteroidTriggerItem;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
@@ -117,13 +118,19 @@ public class CommonPayload {
         }
     }
 
-    public record AddCombatPoolEntry(BlockPos pos) implements CustomPacketPayload {
+    public record AddCombatPoolEntry(BlockPos pos, CombatEnvironment.TimeOfDay time,
+                                      CombatEnvironment.Weather weather) implements CustomPacketPayload {
         // Payload ID
         public static final CustomPacketPayload.Type<AddCombatPoolEntry> TYPE =
                 new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(WorldTriggerMod.MODID, "add_combat_pool_entry"));
 
+        private static final CombatEnvironment.TimeOfDay[] TIMES = CombatEnvironment.TimeOfDay.values();
+        private static final CombatEnvironment.Weather[] WEATHERS = CombatEnvironment.Weather.values();
+
         public static final StreamCodec<ByteBuf, AddCombatPoolEntry> STREAM_CODEC = StreamCodec.composite(
                 BlockPos.STREAM_CODEC, AddCombatPoolEntry::pos,
+                ByteBufCodecs.VAR_INT.map(i -> TIMES[i], CombatEnvironment.TimeOfDay::ordinal), AddCombatPoolEntry::time,
+                ByteBufCodecs.VAR_INT.map(i -> WEATHERS[i], CombatEnvironment.Weather::ordinal), AddCombatPoolEntry::weather,
                 AddCombatPoolEntry::new
         );
 
@@ -132,7 +139,7 @@ public class CommonPayload {
                 var player = context.player();
 
                 if (player.level().getBlockEntity(data.pos()) instanceof CombatSimulateConsoleEntity blockEntity) {
-                    blockEntity.addRandomCombatEnvironment();
+                    blockEntity.addCombatEnvironment(new CombatEnvironment(data.time(), data.weather()));
                 }
             });
         }

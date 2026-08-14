@@ -38,7 +38,13 @@
   "gui.wtmod.category.defense": "Defenses",
   "gui.wtmod.category.optional": "Optionals",
   "gui.wtmod.combat_simulate_console": "Current simulations",
-  "gui.wtmod.combat_simulate_console.generate": "Generate Scenario",
+  "gui.wtmod.combat_simulate_console.generate": "Add Scenario",
+
+  "gui.wtmod.combat_environment_picker.title": "Select Combat Environment",
+  "gui.wtmod.combat_environment_picker.time": "Time",
+  "gui.wtmod.combat_environment_picker.weather": "Weather",
+  "gui.wtmod.combat_environment_picker.confirm": "Confirm",
+  "gui.wtmod.combat_environment_picker.cancel": "Cancel",
 
   "combat_environment.wtmod.description": "%1$s / %2$s",
   "combat_environment.wtmod.time.morning": "Morning",

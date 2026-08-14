@@ -38,7 +38,13 @@
   "gui.wtmod.category.defense": "防禦類",
   "gui.wtmod.category.optional": "選配",
   "gui.wtmod.combat_simulate_console": "進行中戰鬥",
-  "gui.wtmod.combat_simulate_console.generate": "生成戰鬥環境",
+  "gui.wtmod.combat_simulate_console.generate": "新增戰鬥環境",
+
+  "gui.wtmod.combat_environment_picker.title": "選擇戰鬥環境",
+  "gui.wtmod.combat_environment_picker.time": "時間",
+  "gui.wtmod.combat_environment_picker.weather": "天氣",
+  "gui.wtmod.combat_environment_picker.confirm": "確認",
+  "gui.wtmod.combat_environment_picker.cancel": "取消",
 
   "combat_environment.wtmod.description": "%1$s / %2$s",
   "combat_environment.wtmod.time.morning": "早上",

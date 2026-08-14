@@ -32,6 +32,18 @@ public class CombatSimulateConsoleScreen extends BaseMachineScreen<CombatSimulat
     private static final int BUTTON_WIDTH = 100;
     private static final int BUTTON_HEIGHT = 14;
 
+    // Shared with CombatEnvironmentPickerScreen - matches the light gray/white theme sampled
+    // from combat_simulate_console_gui.png (panel 0xC6C6C6, border 0x555555) so the hand-drawn
+    // UI elements blend into the console's background instead of the earlier dark-theme mockup.
+    private static final int COLOR_BUTTON_IDLE = 0xFFB0B0B0;
+    private static final int COLOR_BUTTON_HOVER = 0xFFCFCFCF;
+    private static final int COLOR_BUTTON_BORDER = 0xFF555555;
+    private static final int COLOR_BUTTON_TEXT = 0xFF202020;
+    private static final int COLOR_ROW_HOVER = 0x30000000;
+    private static final int COLOR_ROW_TEXT = 0xFF404040;
+    private static final int COLOR_REMOVE_BUTTON = 0xFFB33A3A;
+    private static final int COLOR_REMOVE_TEXT = 0xFFFFFFFF;
+
     private int scrollOffset = 0;
 
     public CombatSimulateConsoleScreen(CombatSimulateConsoleMenu menu, Inventory playerInventory, Component title) {
@@ -79,26 +91,27 @@ public class CombatSimulateConsoleScreen extends BaseMachineScreen<CombatSimulat
                 int rowY = LIST_TOP + i * ROW_HEIGHT;
 
                 if (localMouseX >= LIST_LEFT && localMouseX < LIST_RIGHT && localMouseY >= rowY && localMouseY < rowY + ROW_HEIGHT) {
-                    guiGraphicsExtractor.fill(LIST_LEFT, rowY, LIST_RIGHT, rowY + ROW_HEIGHT, 0x30FFFFFF);
+                    guiGraphicsExtractor.fill(LIST_LEFT, rowY, LIST_RIGHT, rowY + ROW_HEIGHT, COLOR_ROW_HOVER);
                 }
 
                 Component rowText = Component.literal("#" + (index + 1) + " ").append(environment.describe());
-                guiGraphicsExtractor.text(this.font, rowText, LIST_LEFT + 2, rowY + 1, 0xFF404040, false);
+                guiGraphicsExtractor.text(this.font, rowText, LIST_LEFT + 2, rowY + 1, COLOR_ROW_TEXT, false);
 
-                guiGraphicsExtractor.fill(REMOVE_BUTTON_LEFT, rowY, LIST_RIGHT, rowY + ROW_HEIGHT, 0x40FF0000);
-                guiGraphicsExtractor.text(this.font, "x", REMOVE_BUTTON_LEFT + 1, rowY + 1, 0xFFFFFFFF, false);
+                guiGraphicsExtractor.fill(REMOVE_BUTTON_LEFT, rowY, LIST_RIGHT, rowY + ROW_HEIGHT, COLOR_REMOVE_BUTTON);
+                guiGraphicsExtractor.text(this.font, "x", REMOVE_BUTTON_LEFT + 1, rowY + 1, COLOR_REMOVE_TEXT, false);
             }
         }
 
         boolean buttonHovered = localMouseX >= BUTTON_LEFT && localMouseX < BUTTON_LEFT + BUTTON_WIDTH
                 && localMouseY >= BUTTON_TOP && localMouseY < BUTTON_TOP + BUTTON_HEIGHT;
+        guiGraphicsExtractor.fill(BUTTON_LEFT - 1, BUTTON_TOP - 1, BUTTON_LEFT + BUTTON_WIDTH + 1, BUTTON_TOP + BUTTON_HEIGHT + 1, COLOR_BUTTON_BORDER);
         guiGraphicsExtractor.fill(BUTTON_LEFT, BUTTON_TOP, BUTTON_LEFT + BUTTON_WIDTH, BUTTON_TOP + BUTTON_HEIGHT,
-                buttonHovered ? 0xFF5A5A5A : 0xFF3A3A3A);
+                buttonHovered ? COLOR_BUTTON_HOVER : COLOR_BUTTON_IDLE);
         Component buttonLabel = Component.translatable("gui.wtmod.combat_simulate_console.generate");
         int labelWidth = this.font.width(buttonLabel);
         guiGraphicsExtractor.text(this.font, buttonLabel,
                 BUTTON_LEFT + (BUTTON_WIDTH - labelWidth) / 2, BUTTON_TOP + (BUTTON_HEIGHT - 8) / 2,
-                0xFFFFFFFF, false);
+                COLOR_BUTTON_TEXT, false);
     }
 
     @Override
@@ -110,7 +123,7 @@ public class CombatSimulateConsoleScreen extends BaseMachineScreen<CombatSimulat
             if (localX >= BUTTON_LEFT && localX < BUTTON_LEFT + BUTTON_WIDTH
                     && localY >= BUTTON_TOP && localY < BUTTON_TOP + BUTTON_HEIGHT) {
                 BlockPos pos = this.menu.getBlockEntity().getBlockPos();
-                ClientPacketDistributor.sendToServer(new CommonPayload.AddCombatPoolEntry(pos));
+                this.minecraft.setScreenAndShow(new CombatEnvironmentPickerScreen(this, pos));
                 return true;
             }
 

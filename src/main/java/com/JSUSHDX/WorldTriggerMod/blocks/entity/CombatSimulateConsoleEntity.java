@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,8 +27,8 @@ public class CombatSimulateConsoleEntity extends BaseMachineBlockEntity implemen
     public static final int INVENTORY_SIZE = 0;
 
     /**
-     * combat_pool: the matrix of generated combat scenarios (time of day + weather)
-     * accumulated by pressing the "generate" button on the console's screen.
+     * combat_pool: the matrix of combat scenarios (time of day + weather) the player has
+     * chosen via {@code CombatEnvironmentPickerScreen} and added through the console's screen.
      */
     private final List<CombatEnvironment> combatPool = new ArrayList<>();
 
@@ -38,19 +37,10 @@ public class CombatSimulateConsoleEntity extends BaseMachineBlockEntity implemen
     }
 
     /**
-     * Rolls a random time-of-day/weather combination and appends it to the combat pool.
+     * Appends a caller-chosen time-of-day/weather combination to the combat pool
+     * (picked by the player through {@code CombatEnvironmentPickerScreen}).
      */
-    public void addRandomCombatEnvironment() {
-        RandomSource random = level != null ? level.getRandom() : RandomSource.create();
-
-        CombatEnvironment.TimeOfDay[] times = CombatEnvironment.TimeOfDay.values();
-        CombatEnvironment.Weather[] weathers = CombatEnvironment.Weather.values();
-
-        CombatEnvironment environment = new CombatEnvironment(
-                times[random.nextInt(times.length)],
-                weathers[random.nextInt(weathers.length)]
-        );
-
+    public void addCombatEnvironment(CombatEnvironment environment) {
         combatPool.add(environment);
         setChanged();
         syncToClients();
